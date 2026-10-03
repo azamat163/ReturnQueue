@@ -24,9 +24,15 @@
 - [Summary, Settings и напоминание для вещи — концепты P2](https://www.figma.com/design/SMVZHX6PVpx83cRfqM6S2o/Untitled?node-id=22-249). Напоминания включаются пользователем и отменяются после сдачи; деньги и store credit в Summary разделены.
 - [Превью первого макета из 8 экранов](docs/design/return-queue-preview.png), [превью новых экранов P2](docs/design/return-queue-settings-preview.png); [идентификаторы Figma и проверка](docs/figma-design-state.json).
 
-Начат pure Swift core до финальной спецификации; он остаётся непроверенным черновиком,
-требует приведения к новой модели. iPhone UI и Xcode-проект ещё не созданы. При текущей конфигурации активны Apple Command Line
-Tools; сборка iOS и симулятор не проверены. Это не мешает этапу исследования ниши.
+Первый P1 slice принят после независимого review и проверок: pure Swift модель и строгий portable JSON v1 под
+[финальный контракт](specs/001-free-return-prototype/contracts/backup.md).
+[JSON schema](specs/001-free-return-prototype/contracts/backup.schema.json) фиксирует форму;
+Core проверяет календарные дни, деньги/credit, поля, связи и ручной closure.
+Результаты независимого review и проверок — в [verification](specs/001-free-return-prototype/verification.md).
+Filesystem draft отделён в ReturnQueueStorageDraft; блокировка записи после corrupt load
+и atomic replacement ещё требуют T005/T012/T013. iPhone UI и Xcode-проект ещё не созданы.
+Полный Xcode 26.3 установлен, iOS SDK и симуляторы доступны; native Core XCTest
+прошли 49/49. Это не подтверждает сборку или запуск будущего iPhone app target.
 Синхронизируемые `../sources/` и родительский AGENTS.md остаются справочными материалами.
 
 ## Основа разработки iOS
@@ -66,7 +72,8 @@ $speckit-converge
 ```
 
 Спецификация бесплатного эксперимента готова в specs/001-free-return-prototype/.
-Текущий этап завершает требования; далее реализовать P1 по задачам и проверить пользу.
+Текущий этап — первый проверяемый P1 Core/JSON slice. После его review и проверок
+предстоят durable storage, UI, iOS acceptance и пользовательская проверка пользы.
 В исходном ChatGPT workspace корень репозитория находится в папке `app`;
 установленные навыки могут потребовать открытия Codex именно на этой папке.
 В текущем чате агент может читать их инструкции напрямую; регистрация в интерфейсе

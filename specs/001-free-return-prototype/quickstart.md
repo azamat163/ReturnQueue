@@ -1,22 +1,29 @@
 # Проверка первого бесплатного прототипа
 
-Статус: руководство будущей реализации. Сейчас существуют требования и черновик core;
+Статус: первый P1 Core/JSON slice принят после независимого review и 49 XCTest;
 готового iPhone-приложения нет. Команды ниже не подтверждают готовность UI.
 
 ## Что понадобится
 
 Для независимого ядра — Swift 6+. Для iPhone-сборки и сценариев интерфейса — полный Xcode
-с iOS 17+ SDK и симулятором или тестовым iPhone. Текущая среда не содержит Xcode.
+с iOS 17+ SDK и симулятором или тестовым iPhone. Xcode 26.3 установлен; iOS SDK 26.2
+и симуляторы доступны, но app target/сборка/запуск ещё не готовы (T001).
 
-После выполнения задач ядра, из корня репозитория (папка app в ChatGPT workspace):
+Из корня выбранного рабочего checkout, после реализации первого slice:
 
 ```sh
-swift test
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcrun swift test
 ```
 
-Ожидаемый результат: новые тесты спецификации для денег, календарных дней, состояний,
-partial/store credit, атомарного сохранения и отказа восстановления проходят.
-Текущий набор тестов черновика необходимо обновить перед этим.
+Первый slice проверяет обязательные/неизвестные поля, деньги и store credit,
+Gregorian CalendarDay, ручной closure и строгий JSON v1 roundtrip/отказ decode.
+Это не доказательство перезапуска iOS, atomic replacement или corrupt-save blocking:
+filesystem draft находится в ReturnQueueStorageDraft; T005/T012/T013 ещё открыты.
+Реальные результаты и ограничения сохраняются в [verification.md](verification.md).
+Принятый pure package gate — native XCTest с Apple Swift 6.2.4 в полном Xcode.
+Тесты Linux fallback (Swift 6.2.1 Docker) завершались timeout в разных местах;
+их причина не установлена, Linux PASS/support не заявляется. Native Core PASS
+не заменяет отдельные app build и iPhone acceptance.
 
 ## Сценарии P1 на устройстве
 

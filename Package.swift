@@ -7,6 +7,10 @@ let package = Package(
   products: [.library(name: "ReturnQueueCore", targets: ["ReturnQueueCore"])],
   targets: [
     .target(name: "ReturnQueueCore", path: "ReturnQueue/Core"),
+    // Compilation seam for the preserved filesystem draft; T005 remains pending.
+    .target(
+      name: "ReturnQueueStorageDraft", dependencies: ["ReturnQueueCore"],
+      path: "ReturnQueue/Services"),
     .testTarget(
       name: "ReturnQueueCoreTests", dependencies: ["ReturnQueueCore"],
       path: "Tests/ReturnQueueCoreTests"),

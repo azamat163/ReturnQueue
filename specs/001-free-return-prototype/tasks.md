@@ -1,25 +1,26 @@
 # Tasks: Free Return Queue
 
 **Input**: [spec.md](spec.md), [plan.md](plan.md), [data-model.md](data-model.md), contracts/.
-**Status**: План реализации; работы не отмечены выполненными по наличию старого черновика.
+**Status**: T002–T004 приняты после независимого review и native XCTest: 49/49 PASS.
+Остальные задачи открыты; iOS UI/storage и полный P1 acceptance не завершены.
 **Tests**: Проверки прямо требуются FR-044. Приёмка на устройстве отдельна от core tests.
 **Organization**: Сначала P1, затем по результатам теста P2. Все функции бесплатны.
 
 ## Phase 1: Setup
 
 - [ ] T001 Проверить Xcode/iOS SDK и создать собираемый проект ReturnQueue.xcodeproj и ReturnQueue/ReturnQueueApp.swift; отсутствие SDK записать в quickstart.md.
-- [ ] T002 Утвердить Codable JSON v1 и публичный контракт модели в specs/001-free-return-prototype/contracts/backup.md; отделить старый черновик от финальных полей.
+- [x] T002 Утвердить Codable JSON v1 и публичный контракт модели в specs/001-free-return-prototype/contracts/backup.md; отделить старый черновик от финальных полей.
 
 ## Phase 2: Foundation
 
-- [ ] T003 Привести ReturnQueue/Core/ReturnItem.swift и Money.swift к data-model.md: optional day/amount/location, USD cents, отдельные reimbursement, manual closure и лимиты; создать CalendarDay.swift.
+- [x] T003 Привести ReturnQueue/Core/ReturnItem.swift и Money.swift к data-model.md: optional day/amount/location, USD cents, отдельные reimbursement, manual closure и лимиты; создать CalendarDay.swift.
 
 ## Phase 3: US1 — Быстро записать возврат
 
 Independent test: минимальная запись без даты/суммы сохраняется и переживает перезапуск.
 
-- [ ] T004 [P] [US1] Написать проверки обязательных текстов, unknown != zero и day-only timezone в Tests/ReturnQueueCoreTests/RecordTests.swift.
-- [ ] T005 [US1] Реализовать безопасное чтение/атомарную запись и блокировку при corrupt load в ReturnQueue/Core/ReturnRepository.swift; error состояния в ReturnQueue/Services/ReturnStore.swift.
+- [x] T004 [P] [US1] Написать проверки обязательных текстов, unknown != zero и day-only timezone в Tests/ReturnQueueCoreTests/RecordTests.swift.
+- [ ] T005 [US1] Реализовать безопасное чтение/атомарную запись и блокировку при corrupt load в ReturnQueue/Services/ReturnRepository.swift; error состояния в ReturnQueue/Services/ReturnStore.swift.
 - [ ] T006 [US1] Создать минимальную форму, детали, отмену и ошибки сохранения в ReturnQueue/UI/ReturnEditor.swift и ReturnDetail.swift.
 
 ## Phase 4: US2 — Поездка по местам сдачи
@@ -77,7 +78,8 @@ Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересч
 - [ ] T027 [US6] Обновить P2 архив локальными global/default/per-item настройками; проверить roundtrip, отсутствие переноса OS permission и отмену старого расписания при replacement в ReturnQueue/Services/ArchiveService.swift и Tests/ReturnQueueCoreTests/ReminderArchiveTests.swift. Summary не сохранять как источник.
 - [ ] T028 [US6] [US7] Пройти на устройстве/симуляторе P2-сценарии Summary, Settings и item reminder: контрольные суммы/счётчики, permission/global states, календарные дни/local wall-clock travel и notification routing; записать только реальные результаты в verification.md.
 
-Номера T001–T024 сохранены. T025–T028 — новые задачи; все пока не выполнены.
+Номера T001–T024 сохранены. T025–T028 — новые задачи и остаются открытыми.
+Приняты только T002/T003/T004; доказательства — [verification.md](verification.md).
 
 ## Phase 11: Итоговая проверка
 
@@ -86,7 +88,11 @@ Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересч
 
 ## Dependencies & Execution Order
 
-T001/T002 -> T003 -> T004–T014 -> T015/T016 = первый прототип.
+Для полного приложения: T001/T002 -> T003 -> T004–T014 -> T015/T016.
+Первый независимый slice T002 -> T003 -> T004 + codec contract tests можно проверить
+без iOS SDK. T001 остаётся блокером app build, а перенос filesystem draft из Core
+в Services не завершает T005. Тесты JSON boundary покрывают часть T012; его
+atomic failure/persistence acceptance остаётся отдельной работой.
 US2/US3/US4 опираются на одну модель и ReturnStore; changes в общих файлах последовательны.
 P2 начинается после P1: US5 T017–T019, US6 T020–T022 + T027,
 US7 T025/T026; T027 зависит от T017 и фиксированного Settings/reminder контракта.

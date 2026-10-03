@@ -22,10 +22,12 @@ bank integrations or payment processing. Business viability remains unvalidated.
 Current specification: specs/001-free-return-prototype/spec.md.
 P1 must be independently usable; photos and reminders are P2.
 
-Current stage: requirements, design and development harness. Core Swift files and tests were started
-before final requirements, are unverified drafts and need reconciliation before
-further implementation. Do not mark backlog tasks complete merely because those
-files exist. Verify the iOS app on a real SDK/device before reporting it works.
+Current stage: first P1 Core/model/archive-codec slice accepted after independent
+review and native 49/49 XCTest; evidence lives in specs/001-free-return-prototype/verification.md.
+Core has no filesystem access. Preserved filesystem code lives in the separate
+ReturnQueueStorageDraft target and is not T005 acceptance. UI and iOS app target
+remain pending. Full Xcode 26.3, iOS SDK and simulators are available; their presence
+does not complete T001 app creation/build. Do not mark tasks complete merely because files exist. Verify the iOS app on a real SDK/device before reporting it works.
 Never equate specification quality checks with implementation checks.
 
 For Swift/iOS work read docs/swift-style-guide.md and docs/ios-architecture.md.

@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:returnqueue:backup:p1:v1",
+  "title": "ReturnQueue P1 portable archive v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "records"
+  ],
+  "properties": {
+    "format": {
+      "const": "com.azamat163.returnqueue.p1"
+    },
+    "version": {
+      "const": 1
+    },
+    "records": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    }
+  },
+  "$defs": {
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "merchant",
+        "dropOffLocation",
+        "returnBy",
+        "purchaseDate",
+        "droppedOffDate",
+        "expectedRefundDate",
+        "purchasePriceCents",
+        "expectedRefundCents",
+        "currency",
+        "state",
+        "closureOutcome",
+        "closureNote",
+        "notes",
+        "policyReference",
+        "createdAt",
+        "updatedAt",
+        "reimbursements"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "merchant": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dropOffLocation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "returnBy": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purchaseDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "droppedOffDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expectedRefundDate": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purchasePriceCents": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expectedRefundCents": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currency": {
+          "const": "USD"
+        },
+        "state": {
+          "enum": [
+            "planned",
+            "droppedOff",
+            "closed",
+            "kept"
+          ]
+        },
+        "closureOutcome": {
+          "anyOf": [
+            {
+              "enum": [
+                "fullRefund",
+                "partialRefund",
+                "denied",
+                "cancelled"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "closureNote": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 0
+        },
+        "policyReference": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": "integer",
+          "minimum": -62135596800000,
+          "maximum": 253402300799999
+        },
+        "updatedAt": {
+          "type": "integer",
+          "minimum": -62135596800000,
+          "maximum": 253402300799999
+        },
+        "reimbursements": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": {
+            "$ref": "#/$defs/reimbursement"
+          }
+        }
+      }
+    },
+    "reimbursement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "returnItemID",
+        "date",
+        "amountCents",
+        "kind",
+        "note"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$"
+        },
+        "returnItemID": {
+          "type": "string",
+          "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$"
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "amountCents": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000000
+        },
+        "kind": {
+          "enum": [
+            "money",
+            "storeCredit"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 0
+        }
+      }
+    }
+  },
+  "$comment": "JSON Schema maxLength is intentionally omitted below: Swift String.count grapheme limits are normative; calendar/links/unique IDs/state rules and integer lexical form require codec validation."
+}

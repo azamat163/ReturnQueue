@@ -36,6 +36,21 @@ public enum Money {
     let (scaled, multiplyOverflow) = dollars.multipliedReportingOverflow(by: 100)
     let (result, additionOverflow) = scaled.addingReportingOverflow(fraction)
     guard !multiplyOverflow, !additionOverflow else { throw ReturnQueueError.moneyOverflow }
+    try validate(cents: result, currency: "USD", allowsZero: true)
+    return result
+  }
+
+  public static func validate(cents: Int, currency: String, allowsZero: Bool = false) throws {
+    guard currency == "USD" else { throw ReturnQueueError.invalidCurrency(currency) }
+    guard ((allowsZero ? 0 : 1)...100_000_000).contains(cents) else {
+      throw ReturnQueueError.invalidAmount
+    }
+  }
+
+  /// Adds validated amounts without imposing the per-event limit on a total.
+  public static func adding(_ lhs: Int, _ rhs: Int) throws -> Int {
+    let (result, overflow) = lhs.addingReportingOverflow(rhs)
+    guard !overflow else { throw ReturnQueueError.moneyOverflow }
     return result
   }
 

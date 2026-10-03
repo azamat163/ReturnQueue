@@ -71,19 +71,29 @@ apply layout. Keep broad formatting changes separate from domain behavior.
 
 ## Current evidence and remaining integration
 
-The current code is a draft built before the final product requirements. Formatting
-does not reconcile its model. Core tests can only prove assertions about that draft;
-the current spec requires optional fields, CalendarDay and reimbursement events.
-The app target and device workflow still need implementation.
+The first P1 Core slice now follows the exact JSON contract, optional fields,
+CalendarDay and reimbursement events. Its status is recorded in
+[slice verification](../specs/001-free-return-prototype/verification.md); independent
+review and native 49-test verification passed for this slice. The filesystem implementation is a preserved
+draft in ReturnQueueStorageDraft; ReturnStore, confirmed replacement, the app
+target and device workflow still need implementation.
 
-Local preparation on 2026-10-03: Spec Kit integration reports no missing or modified
+Earlier host preparation on 2026-10-03: Spec Kit integration reports no missing or modified
 managed files; official Swift 6.2.1 formatter is available. Draft Swift files were
 formatted without changing their domain behavior. With writable scoped caches,
 the Core module compiled, but XCTest is unavailable in the selected Command Line
 Tools environment, so the package test run failed. No passing Core test result or
-iOS build is claimed. A nested sandbox may also prevent SwiftPM's own manifest
+iOS build was claimed from that earlier environment. A nested sandbox may also prevent SwiftPM's own manifest
 sandbox; a local opt-in workaround is described in the CI guide, without changing
 normal CI defaults.
+
+Later on 2026-10-03, the user installed full Xcode 26.3 (17C529), with Apple Swift
+6.2.4, iOS SDK 26.2 and available simulators. Independent native SwiftPM/XCTest
+verification passed all 49 Core/JSON tests (exit 0); T002/T003/T004 are accepted.
+Linux Swift 6.2.1 Docker attempts timed out in different places, even with output
+redirected; the infrastructure cause remains unresolved. They are failed attempts,
+not Linux acceptance. Core's required gate now uses the actual native toolchain;
+no app target, simulator app launch or release has been validated yet.
 
 GitLab configuration can be reviewed locally before choosing a GitLab project.
 The GitHub repository remains the known remote until the user chooses migration or

@@ -1,7 +1,9 @@
 # Return Queue: iOS architecture
 
 Status: implementation contract, reviewed against the product specification on
-2026-10-03. Existing `ReturnQueue/Core/` and its tests remain unverified drafts.
+2026-10-03. The first `ReturnQueue/Core/` model/JSON slice is reconciled with the
+current contracts and passed independent review/native 49-test verification. Filesystem and UI
+work remain pending; see [slice evidence](../specs/001-free-return-prototype/verification.md).
 This document does not establish an iOS build, working features or release readiness.
 
 The target is iPhone, iOS 17+, SwiftUI and Swift 6 language mode. The deployment
@@ -115,12 +117,14 @@ keep independent mutable copies of its ledger.
   distinct return IDs with an event, recompute after edits/deletes/restore, and
   never substitute expected refunds, purchase prices or closure dates.
 
-Before implementing features, reconcile the current draft: it has mandatory
-purchase amount/location/deadline, a timestamp deadline, `refunded` status and a
-single `refundReceivedCents`. Those differ from the current optional CalendarDay
-fields, closure outcomes and money/store-credit event ledger. Filesystem access
-also currently lives under Core; move the platform/storage boundary into Services.
-Existing tests must be reassessed rather than treated as acceptance evidence.
+The first Core slice replaces the earlier mandatory amount/location/timestamp
+deadline, `refunded` status and single `refundReceivedCents` with optional
+CalendarDay fields, closure outcomes and a money/store-credit event ledger.
+The exact P1 marker/schema rejects the unreleased draft wire format. Filesystem
+access now sits in the separate `ReturnQueueStorageDraft` target under Services.
+Its preserved load/save is a compilation seam, not T005 corruption blocking,
+confirmed replacement or a serialized ReturnStore implementation. Updated Core
+tests must pass the separate review/verification gates before acceptance.
 
 ## P1 and P2 isolation
 

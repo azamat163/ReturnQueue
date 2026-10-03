@@ -112,5 +112,6 @@ Review a change against its Spec Kit requirement, ownership boundaries, validati
 and durability behavior, cancellation/isolation, accessibility and appropriate
 tests. Core behavior uses meaningful XCTest scenarios and temporary storage.
 An Xcode simulator/device check remains mandatory for iOS feature acceptance.
-The present draft Core must be reconciled with the event ledger before it is
-treated as an implementation foundation.
+The first Core/model/codec slice reconciles the event ledger and passed independent
+review/native 49-test verification. The separate filesystem draft and future
+ReturnStore/UI still require their own durability and iOS acceptance checks.

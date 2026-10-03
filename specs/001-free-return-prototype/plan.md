@@ -2,7 +2,7 @@
 
 **Branch**: none | **Date**: 2026-10-03 | **Spec**: [spec.md](spec.md)
 
-**Input**: Бесплатный прототип P1; фото, Summary и Settings/напоминания P2. Текущий этап — требования, план и дизайн.
+**Input**: Бесплатный прототип P1; фото, Summary и Settings/напоминания P2. Текущий slice — P1 JSON/model/record tests (T002–T004); UI/storage остаются последующими задачами.
 
 ## Summary
 
@@ -39,8 +39,10 @@ P2 — внутренние файлы фото и полный архив с в
 P2 — фото, Summary, локальные Settings и настройка напоминания вещи. Небольшая
 индивидуальная база. P2 навигация: четыре вкладки Queue, Waiting, History, Summary;
 Settings открывается шестерёнкой. Новые экраны не повышают приоритет напоминаний и не блокируют P1.
-**Environment**: Swift 6.2.1 доступен; Xcode/симулятор не найдены. iOS-сборку сейчас нельзя
-подтвердить. Новые пакеты и установка инструментов в рамках этого этапа не нужны.
+**Environment**: Xcode 26.3 (build 17C529) установлен по
+`/Applications/Xcode-26.3.0.app/Contents/Developer`; Apple Swift 6.2.4, iOS SDK 26.2
+и симуляторы доступны. Native Core XCTest 49/49 прошли; app target ещё не создан,
+поэтому сборка/запуск iOS пока не подтверждены (T001 остаётся открытым).
 
 ## Constitution Check
 
@@ -65,6 +67,7 @@ specs/001-free-return-prototype/
   data-model.md
   contracts/ui.md
   contracts/backup.md
+  contracts/backup.schema.json
   quickstart.md
   tasks.md
   checklists/requirements.md
@@ -73,15 +76,22 @@ specs/001-free-return-prototype/
 ### Source Code (repository root)
 
 ```text
-Package.swift                         # существующий черновик
-ReturnQueue/Core/                     # существующий черновик; переделать под spec
-ReturnQueue/Services/                 # планируемое хранение/архив/разрешения
+Package.swift                         # Core + отдельный storage-draft target
+ReturnQueue/Core/                     # P1 value types и pure archive codec; review/check gates
+ReturnQueue/Services/                 # прежний filesystem draft; T005 не принят
 ReturnQueue/UI/                       # планируемые формы, очередь, результат, настройки
 ReturnQueue/ReturnQueueApp.swift       # планируемая точка входа
 ReturnQueue.xcodeproj/                # планируемый проект для Xcode
-Tests/ReturnQueueCoreTests/            # черновик проверок, сверить со спецификацией
+Tests/ReturnQueueCoreTests/            # P1 records/money/calendar/archive contract checks
 ReturnQueueUITests/                   # планируемые iOS-сценарии
 ```
+
+**First slice boundary**: Точный [JSON v1](contracts/backup.md) и [schema](contracts/backup.schema.json)
+предшествуют модели. Core codec не читает файлы; существующий filesystem draft
+перенесён в отдельный ReturnQueueStorageDraft target только для сборочного разделения.
+Он не реализует весь T005 и не доказывает блокировку сохранения после corrupt load.
+T001 блокирует iOS-сборку, но не независимые T002–T004. P1/P2 приложение остаётся
+непроверенным до соответствующих задач и device acceptance.
 
 **Structure Decision**: Core не зависит от UI и iOS-фреймворков; устройство и разрешения
 обрабатывает Services, действия пользователя — UI. Не создавать API/backend.
