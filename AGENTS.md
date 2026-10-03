@@ -5,10 +5,17 @@ applicable. Synced reference files under the parent's sources/ are read-only:
 do not edit, rename, move, or delete them. A standalone clone has no dependency
 on those parent files.
 
-The user requests orchestration with subagents and Spec Kit requirements.
-Use bounded agent assignments with explicit file ownership; the lead integrates
-changes and keeps a single specification. Do not let multiple agents edit a shared
-model/schema file concurrently.
+The user requests this workflow: root manager/orchestrator -> development lead and
+implementation subagents -> independent code reviewer -> separate tester/verifier
+-> root commit and push. The development lead delegates implementation with explicit
+file ownership, integrates changes and keeps one specification and task ledger.
+Do not let multiple agents edit a shared model/schema file concurrently.
+The author must not be the sole reviewer or verifier. Developers, workers, reviewers
+and testers do not commit or push; only root does, after review findings are resolved
+and required checks pass on the final diff. A failed or unavailable required check
+blocks commit/push and must be reported. Scope checks to the change: documentation
+alone does not require iOS tests. Material changes after review return to the relevant
+review and checks. See docs/development-harness.md for the handoff requirements.
 
 Current user preference: free iPhone prototype, no monetization, ads, accounts,
 bank integrations or payment processing. Business viability remains unvalidated.

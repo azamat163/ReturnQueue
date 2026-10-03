@@ -16,10 +16,20 @@ the local loop. `python3 tooling/harness.py check` checks the foundation;
 `python3 tooling/harness.py verify` additionally runs formatter and Core tests.
 These checks do not prove iOS behavior or agreement with the product specification.
 
-Assign subagents independent file ownership when parallel work helps. The lead owns
-integration and shared schemas. Keep changes traceable to a story/requirement and
-task; update contracts before changing persisted formats. Keep unfinished tasks
-open until their acceptance is demonstrated, including required device checks.
+Follow the user-selected sequence: root manager/orchestrator -> development lead
+and implementation subagents -> independent code reviewer -> separate tester/verifier
+-> root commit and push. The development lead delegates implementation with explicit
+file ownership and owns integration/shared schemas. Keep one specification and task
+ledger; trace changes to a story/requirement and task, and update contracts before
+changing persisted formats.
+
+Review the final diff and resolve actionable findings before verification. The
+author must not be the sole reviewer or verifier. Scope required checks to the
+change: documentation alone needs consistency/link checks, not iOS tests. Record
+results and limitations. Failed or unavailable required checks block commit/push;
+material edits return to the affected review/checks. Only root commits and pushes
+after these gates pass. Keep tasks open until acceptance is demonstrated, including
+required device checks.
 
 For Swift work read [style](../../../docs/swift-style-guide.md) and
 [MVVM boundaries](../../../docs/ios-architecture.md). For GitLab and release work

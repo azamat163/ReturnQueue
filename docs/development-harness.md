@@ -26,14 +26,28 @@ not been confirmed; skills can be read explicitly or used after opening `app`.
 
 ## Development loop
 
-1. Read the current story, requirement, task, data model and relevant contracts.
+1. **Root manager/orchestrator** selects the current story and task, acceptance
+   criteria and required checks from the spec, plan, data model and contracts.
    Use the installed Spec Kit specify/clarify/plan/tasks/analyze skills as needed.
-2. Assign independent file ownership for parallel work. The lead integrates shared
-   models and retains a single specification.
-3. Implement a vertical slice within the MVVM boundaries. Preserve P1 usability;
+2. **Development lead** delegates implementation tasks to subagents with explicit,
+   independent file ownership. The lead integrates shared models and maintains one
+   specification and task ledger. Implement a vertical slice within MVVM boundaries;
    P2 photos, Summary and reminders do not become P1 launch dependencies.
-4. Run checks suitable for the changed behavior. Record the command, environment,
-   outcome and limits of the evidence before marking a product task complete.
+3. **Independent code reviewer** reviews the final diff against requirements,
+   architecture and correctness. The lead resolves actionable findings before
+   handing the resulting diff back for review.
+4. **Separate tester/verifier** checks acceptance and runs the required checks for
+   that diff. Record the command, environment, result and evidence limits. For
+   documentation-only changes, check consistency and links without requiring iOS
+   tests. An author cannot serve as the sole reviewer or verifier.
+5. **Root** inspects the final diff and handoff evidence, then commits and pushes
+   only after findings are resolved and required checks pass. Developers, workers,
+   reviewers and testers do not commit or push. A failed or unavailable required
+   check blocks publication and is reported; it is never counted as passing.
+
+Material edits after review invalidate the affected review/checks and must return
+through those gates. Keep product tasks open until their acceptance is demonstrated,
+including required SDK/device checks; a draft or prepared pipeline is not completion.
 
 ```sh
 ./specify integration status --json
