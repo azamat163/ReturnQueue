@@ -29,6 +29,21 @@
 Tools; сборка iOS и симулятор не проверены. Это не мешает этапу исследования ниши.
 Синхронизируемые `../sources/` и родительский AGENTS.md остаются справочными материалами.
 
+## Основа разработки iOS
+
+- [Harness вокруг Spec Kit](docs/development-harness.md): три репозиторных навыка
+  для работы с требованиями, Swift/iOS и GitLab release.
+- [Swift style guide](docs/swift-style-guide.md): официальные Swift API Design Guidelines
+  и swiftlang/swift-format; форматирование задаётся `.swift-format`.
+- [Архитектура MVVM](docs/ios-architecture.md): SwiftUI, экранные ViewModels,
+  единый committed snapshot, Services и независимое ядро.
+- [GitLab CI](docs/gitlab-ci.md) и [настройка релиза](docs/release-setup.md): Core quality,
+  ручная iOS-сборка и отдельная загрузка TestFlight после настройки runner и подписи.
+
+Локальная проверка: `python3 tooling/harness.py check`; проверка форматирования и
+тестов ядра: `python3 tooling/harness.py verify`. Это не подтверждение iOS acceptance
+или запуска pipeline в GitLab. Подробности окружения и результаты — в harness guide.
+
 ## Использование
 
 Из этой папки:

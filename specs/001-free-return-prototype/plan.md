@@ -16,6 +16,16 @@ P2 добавляет Summary по ручным событиям и локаль
 
 **Language/Version**: Swift 6 language tools; совместимость iOS 17+.
 **Primary Dependencies**: SwiftUI/Foundation; PhotosUI и UserNotifications только P2.
+**Architecture**: SwiftUI + MVVM, экранные @MainActor/@Observable ViewModels,
+одна committed app-session snapshot и внедряемые Services; чистое Core.
+Границы и порядок durable commit: [ios-architecture.md](../../docs/ios-architecture.md).
+**Code conventions**: официальные Swift API Design Guidelines и swiftlang/swift-format;
+локальная политика `.swift-format` описана в [style guide](../../docs/swift-style-guide.md).
+**Development harness**: репозиторные навыки рядом со Spec Kit и
+[локальные проверки](../../docs/development-harness.md).
+**CI/distribution**: GitLab, независимые Core quality jobs и настраиваемые ручные
+macOS archive/export/TestFlight jobs; [CI](../../docs/gitlab-ci.md),
+[release setup](../../docs/release-setup.md). Живой pipeline и iOS release не подтверждены.
 **Storage**: версия JSON-модели в Application Support, атомарное сохранение;
 P2 — внутренние файлы фото и полный архив с вложениями/локальными настройками;
 разрешение устройства не переносится, Summary вычисляется из событий.

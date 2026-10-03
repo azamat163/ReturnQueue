@@ -1,0 +1,4 @@
+interface:
+  display_name: "ReturnQueue Swift and iOS"
+  short_description: "Official Swift guidance and project MVVM boundaries"
+  default_prompt: "Use $returnqueue-swift-ios to review a ReturnQueue Swift change against its style guide and MVVM architecture."

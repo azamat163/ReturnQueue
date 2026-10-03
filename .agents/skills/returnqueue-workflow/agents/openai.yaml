@@ -1,0 +1,4 @@
+interface:
+  display_name: "ReturnQueue workflow"
+  short_description: "Spec Kit planning, delegation and development checks"
+  default_prompt: "Use $returnqueue-workflow to implement the next ReturnQueue task with scoped delegation and verified evidence."

@@ -1,0 +1,77 @@
+stages:
+  - validate
+  - archive
+  - distribute
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_TAG'
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - if: '$CI_COMMIT_BRANCH'
+
+variables:
+  SWIFT_VERSION: "6.2.1"
+  IOS_RELEASE_ENABLED: "0"
+  TESTFLIGHT_UPLOAD_ENABLED: "0"
+
+foundation:validate:
+  stage: validate
+  image: python:3.12-slim-bookworm
+  tags: [linux, docker]
+  interruptible: true
+  before_script:
+    - apt-get update && apt-get install --no-install-recommends -y git bash
+  script:
+    - python3 tooling/harness.py check
+    - python3 tooling/ci/test-release-tools.py
+
+core:validate:
+  stage: validate
+  image: swift:6.2.1-noble
+  tags: [linux, docker]
+  interruptible: true
+  script:
+    - bash tooling/ci/check-core.sh
+
+.ios-release:
+  tags: [macos, xcode-26, ephemeral]
+  interruptible: false
+  resource_group: return-queue-ios-release
+  environment:
+    name: testflight
+    deployment_tier: testing
+
+ios:archive:
+  extends: .ios-release
+  stage: archive
+  needs: ["foundation:validate", "core:validate"]
+  rules:
+    - if: '$IOS_RELEASE_ENABLED == "1" && $CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+      when: manual
+      allow_failure: false
+    - when: never
+  script:
+    - bash tooling/ci/archive-ios.sh
+  artifacts:
+    when: on_success
+    expire_in: 7 days
+    access: maintainer
+    paths:
+      - build/release/ReturnQueue.xcarchive/
+      - build/release/export/*.ipa
+
+ios:testflight:
+  extends: .ios-release
+  stage: distribute
+  needs:
+    - job: ios:archive
+      artifacts: true
+  rules:
+    - if: '$IOS_RELEASE_ENABLED == "1" && $TESTFLIGHT_UPLOAD_ENABLED == "1" && $CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+      when: manual
+      allow_failure: false
+    - when: never
+  script:
+    - bash tooling/ci/upload-testflight.sh

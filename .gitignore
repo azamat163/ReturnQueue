@@ -8,3 +8,10 @@ xcuserdata/
 .env
 .env.*
 !.env.example
+.ci-work/
+build/
+*.ipa
+*.xcarchive/
+*.p12
+*.p8
+*.mobileprovision

@@ -1,0 +1,4 @@
+interface:
+  display_name: "ReturnQueue GitLab release"
+  short_description: "GitLab checks, signed archives and TestFlight setup"
+  default_prompt: "Use $returnqueue-gitlab-release to review the configured pipeline and prepare an iOS release build."
