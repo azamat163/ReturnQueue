@@ -1,0 +1,14 @@
+annotated-doc==0.0.5
+click==8.5.0
+json5==0.15.0
+markdown-it-py==4.2.0
+mdurl==0.1.2
+packaging==26.3
+pathspec==1.1.1
+Pygments==2.21.0
+PyYAML==6.0.3
+readchar==4.2.2
+rich==15.0.0
+shellingham==1.5.4
+specify-cli @ git+https://github.com/github/spec-kit.git@f1d3a4f8337ebbd3ae22760a9c12e3352b93a175
+typer==0.27.2

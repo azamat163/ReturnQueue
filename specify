@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+app_dir="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+cli_path="$app_dir/.tools/spec-kit/bin/specify"
+# Keep the existing ChatGPT workspace installation usable during the transition.
+if [[ ! -x "$cli_path" && -x "$app_dir/../.tools/spec-kit/bin/specify" ]]; then
+  cli_path="$app_dir/../.tools/spec-kit/bin/specify"
+fi
+if [[ ! -x "$cli_path" ]]; then
+  printf '%s\n' 'Локальный Spec Kit не найден. Инструкция установки находится в README.md.' >&2
+  exit 1
+fi
+cd "$app_dir"
+exec "$cli_path" "$@"
