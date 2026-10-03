@@ -1,14 +1,15 @@
 # Tasks: Free Return Queue
 
 **Input**: [spec.md](spec.md), [plan.md](plan.md), [data-model.md](data-model.md), contracts/.
-**Status**: T002–T004 приняты после независимого review и native XCTest: 49/49 PASS.
-Остальные задачи открыты; iOS UI/storage и полный P1 acceptance не завершены.
+**Status**: T001–T004 приняты: Core 49/49 native XCTest и T001 independent
+unsigned builds + simulator install/launch PASS. Остальные 24 задачи открыты;
+операционные UI/storage и полный P1 acceptance не завершены.
 **Tests**: Проверки прямо требуются FR-044. Приёмка на устройстве отдельна от core tests.
 **Organization**: Сначала P1, затем по результатам теста P2. Все функции бесплатны.
 
 ## Phase 1: Setup
 
-- [ ] T001 Проверить Xcode/iOS SDK и создать собираемый проект ReturnQueue.xcodeproj и ReturnQueue/ReturnQueueApp.swift; отсутствие SDK записать в quickstart.md.
+- [x] T001 Проверить Xcode/iOS SDK и создать собираемый проект ReturnQueue.xcodeproj и ReturnQueue/ReturnQueueApp.swift; фактическую среду и build evidence записать в quickstart.md/verification.md.
 - [x] T002 Утвердить Codable JSON v1 и публичный контракт модели в specs/001-free-return-prototype/contracts/backup.md; отделить старый черновик от финальных полей.
 
 ## Phase 2: Foundation
@@ -79,7 +80,7 @@ Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересч
 - [ ] T028 [US6] [US7] Пройти на устройстве/симуляторе P2-сценарии Summary, Settings и item reminder: контрольные суммы/счётчики, permission/global states, календарные дни/local wall-clock travel и notification routing; записать только реальные результаты в verification.md.
 
 Номера T001–T024 сохранены. T025–T028 — новые задачи и остаются открытыми.
-Приняты только T002/T003/T004; доказательства — [verification.md](verification.md).
+Приняты только T001/T002/T003/T004; доказательства — [verification.md](verification.md).
 
 ## Phase 11: Итоговая проверка
 
@@ -90,7 +91,8 @@ Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересч
 
 Для полного приложения: T001/T002 -> T003 -> T004–T014 -> T015/T016.
 Первый независимый slice T002 -> T003 -> T004 + codec contract tests можно проверить
-без iOS SDK. T001 остаётся блокером app build, а перенос filesystem draft из Core
+без iOS SDK. T001 app bootstrap принят отдельным review/build/launch gate;
+T005 остаётся открытым, а перенос filesystem draft из Core
 в Services не завершает T005. Тесты JSON boundary покрывают часть T012; его
 atomic failure/persistence acceptance остаётся отдельной работой.
 US2/US3/US4 опираются на одну модель и ReturnStore; changes в общих файлах последовательны.

@@ -1,8 +1,9 @@
 # Verification: first P1 Core/JSON slice
 
-Date: 2026-10-03. Status: T002/T003/T004 accepted by root after separate code review
-and independent native verification. Other 25 tasks, including T001/T005/T012,
-remain open. This is Core/JSON acceptance, not a working iOS app or release.
+Date: 2026-10-03. First-slice acceptance: T002/T003/T004 accepted by root after
+separate code review and independent native verification. At that point the other
+25 tasks, including T001/T005/T012, remained open. This historical result is
+Core/JSON acceptance, not a working P1 iOS app or release.
 
 ## Scope
 
@@ -71,7 +72,7 @@ A direct full XCTest run of an earlier binary completed 49 methods in 7.92 secon
 `.08`. The test owner corrected that assertion before independent final native
 verification. That earlier binary/result is not final acceptance evidence.
 
-## Remaining checks
+## Checks remaining at Core handoff (2026-10-03)
 
 - T001 iOS app target creation/build: pending; Xcode/SDK are now available.
 - T005/T012/T013 durable storage, corruption blocking, confirmed replacement: pending.
@@ -81,3 +82,96 @@ verification. That earlier binary/result is not final acceptance evidence.
 
 Only root commits/pushes after final-diff review and scoped checks. No author,
 reviewer or verifier in this slice published changes.
+
+## T001 — minimal iOS bootstrap (separate slice)
+
+Date: **2026-10-04, Europe/Moscow**. Status: **T001 accepted by root** after
+independent review, both unsigned builds and simulator install/launch smoke passed.
+Current ledger: T001/T002/T003/T004 complete; 24 tasks remain open.
+The previous Core acceptance above remains valid; Core sources and its tests
+are unchanged in this slice.
+
+Scope: checked-in ReturnQueue.xcodeproj, shared ReturnQueue scheme, iOS 17+,
+Swift 6 language mode, SwiftUI @main entry and truthful English empty Queue.
+The app links the existing local Swift package's ReturnQueueCore product; domain
+sources are not copied into the app target. Provisional local Bundle ID:
+com.azamat163.returnqueue. Apple registration, team and signing credentials
+have not been configured for this project.
+
+No persistence, return editor, operational actions or P2 functionality is provided.
+T005/T006 and full P1 acceptance remain open. Release Archive configuration is
+prepared, but the scheme has no app test target yet; the existing release script
+continues to block distribution until simulator app tests/test plan and signing
+configuration are supplied. The GitLab YAML/release scripts are unchanged.
+
+Author unsigned builds: **PASS**, exit 0 / BUILD SUCCEEDED for both:
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcodebuild \
+  -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Debug \
+  -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath /private/tmp/returnqueue-t001-sim-author \
+  -clonedSourcePackagesDirPath /private/tmp/returnqueue-t001-packages-author \
+  CODE_SIGNING_ALLOWED=NO build
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcodebuild \
+  -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Release \
+  -destination 'generic/platform=iOS' \
+  -derivedDataPath /private/tmp/returnqueue-t001-device-author \
+  -clonedSourcePackagesDirPath /private/tmp/returnqueue-t001-packages-author \
+  CODE_SIGNING_ALLOWED=NO build
+```
+
+Logs `/private/tmp/returnqueue-t001-sim-author.log` and
+`/private/tmp/returnqueue-t001-device-author.log`. These are unsigned builds,
+not a signed archive/IPA or distribution. Earlier sandboxed build failed on
+SwiftPM cache/CoreSimulator access; scoped escalation permitted the actual SDK
+builds above. The only reported build warning was skipped AppIntents metadata
+(no AppIntents dependency). Native strict formatter, plutil project validation,
+harness check and diff check passed.
+
+Independent reviewer `harness_review`: **PASS**, no actionable findings. Functional
+Swift/project files remained unchanged after this review.
+
+Independent verifier `workflow_verifier`: both unsigned builds **PASS**, exit 0:
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcodebuild \
+  -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Debug \
+  -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath /private/tmp/rq-t001-debug-verifier-4cbjvmjn/DerivedData \
+  CODE_SIGNING_ALLOWED=NO build
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcodebuild \
+  -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Release \
+  -destination 'generic/platform=iOS' \
+  -derivedDataPath /private/tmp/rq-t001-release-verifier-_6linzof/DerivedData \
+  CODE_SIGNING_ALLOWED=NO build
+```
+
+Logs `/private/tmp/rq-t001-debug-verifier-4cbjvmjn/build.log` and
+`/private/tmp/rq-t001-release-verifier-_6linzof/build.log`.
+
+Simulator smoke **PASS**: iPhone 17 / iOS 26.3, UDID
+`5449F349-65C1-4DDF-B11E-9FCF209FBD50`. It was initially Shutdown and had no installed
+ReturnQueue bundle. Verifier booted it, installed the Debug app and launched:
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcrun simctl install \
+  5449F349-65C1-4DDF-B11E-9FCF209FBD50 \
+  /private/tmp/rq-t001-debug-verifier-4cbjvmjn/DerivedData/Build/Products/Debug-iphonesimulator/ReturnQueue.app
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcrun simctl launch \
+  5449F349-65C1-4DDF-B11E-9FCF209FBD50 com.azamat163.returnqueue
+```
+
+Launch returned PID **50773**, still alive after three seconds. Screenshot visually
+passed: English empty Queue, no fake purchases or unavailable controls. Root also
+inspected the screenshot and accepted this gate. Verifier terminated its test app and returned only the used, initially Shutdown
+simulator to Shutdown after the smoke run.
+
+Temporary launch metadata `/private/tmp/rq-t001-debug-verifier-4cbjvmjn/launch.json`;
+screenshot `/private/tmp/rq-t001-debug-verifier-4cbjvmjn/returnqueue-launch.png`.
+Root retained a stable task artifact outside the repository:
+`/Users/aagataev/.codex/visualizations/2026/10/03/01a1012c-4737-7c71-8587-6600853c8fec/returnqueue-bootstrap.png`.
+
+This acceptance proves bootstrap compile/install/launch only. It does not complete
+T005 persistence, T006 editor, T008 grouping/navigation, T015 accessibility or T016
+full P1 workflows. No signed archive, IPA, TestFlight or GitLab pipeline was run.

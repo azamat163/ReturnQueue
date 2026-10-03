@@ -2,8 +2,10 @@
 
 The repository now has a [pipeline](../.gitlab-ci.yml) and executable release scripts.
 It has not been connected to a GitLab project or runner, and no Apple credentials
-have been configured. The repository currently contains a SwiftPM Core draft,
-not an iOS application target. An iOS archive cannot be produced at this stage.
+have been configured. The Core/model/archive slice passed independent native
+49-test verification. T001 minimal local iOS bootstrap passed independent unsigned
+build/install/launch verification on 2026-10-04; production
+release prerequisites remain unmet. See [actual evidence](../specs/001-free-return-prototype/verification.md).
 
 ## Checks available now
 
@@ -18,7 +20,8 @@ Foundation checks Spec Kit references and maintained guide/skill links, shell sy
 offline signing-profile safety tests. Core runs strict official Swift formatting
 and SwiftPM tests. Formatter warnings fail the job. Build or test failures remain failures;
 there are no success placeholders for missing tools or unconfigured iOS jobs.
-The current XCTest files still require actual validation. Passing these checks
+Current Core XCTest passed locally on full Xcode; the Linux GitLab job has not run
+and earlier local Docker attempts timed out. Passing these checks
 would validate the package only, not SwiftUI, iOS notifications, signing, or the
 product's requirements.
 
@@ -35,8 +38,8 @@ and Clang caches inside ignored `.build/`. When a local executor is already insi
 a sandbox that cannot nest SwiftPM's manifest sandbox, a deliberate local-only
 `RQ_SWIFTPM_DISABLE_SANDBOX=1` opt-in can be used. It is rejected in CI. This does
 not provide XCTest or the iOS SDK: install full Xcode for Apple-platform tests.
-The current host has Command Line Tools and no usable `xcodebuild`, so no iOS
-or TestFlight validation has been performed.
+The host now has full Xcode 26.3 and native package verification; local bootstrap
+build/launch evidence is tracked separately. No TestFlight validation has run.
 
 ## Release jobs, disabled by default
 
@@ -104,3 +107,16 @@ and App Store Connect upload remain pending their configured environments.
 - [Protected environments and tier requirements](https://docs.gitlab.com/ci/environments/protected_environments/)
 - [Apple command-line archive/export](https://developer.apple.com/library/archive/technotes/tn2339/_index.html)
 - [Apple App Store Connect uploads](https://developer.apple.com/help/app-store-connect/manage-builds/upload-builds/)
+
+## T001 bootstrap agreement
+
+The shared application scheme/product is `ReturnQueue` and the project path is
+`ReturnQueue.xcodeproj`, matching the release scripts' expected naming. The local
+bootstrap Bundle ID is `com.azamat163.returnqueue`; it is provisional and unregistered.
+Any future `IOS_BUNDLE_ID`, App Store record and provisioning profile must agree
+before signing. No team or credentials are stored in the project.
+
+The bootstrap scheme has Release Archive configuration but no app test target yet.
+`archive-ios.sh` deliberately requires app tests/a test plan before signing, so the
+bootstrap does not enable release jobs. The Linux Core image remains 6.2.1 and has
+not been remotely validated; the native author's Xcode toolchain is a separate check.

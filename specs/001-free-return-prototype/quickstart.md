@@ -7,7 +7,8 @@
 
 Для независимого ядра — Swift 6+. Для iPhone-сборки и сценариев интерфейса — полный Xcode
 с iOS 17+ SDK и симулятором или тестовым iPhone. Xcode 26.3 установлен; iOS SDK 26.2
-и симуляторы доступны, но app target/сборка/запуск ещё не готовы (T001).
+и симуляторы доступны. Минимальный app target/пустая Queue создан; авторские
+независимые unsigned builds/review/install/launch прошли (T001 принят 2026-10-04).
 
 Из корня выбранного рабочего checkout, после реализации первого slice:
 
@@ -50,3 +51,20 @@ filesystem draft находится в ReturnQueueStorageDraft; T005/T012/T013 �
 Для первого теста 5 пользователей: время создания минимальной записи, завершение
 процесса без подсказок, повторное реальное использование. Смотрите SC-001/006 в spec.md.
 Не просить оплату и не измерять conversion-to-paid в этом этапе.
+
+## T001 bootstrap build
+
+Проект `ReturnQueue.xcodeproj`, shared scheme `ReturnQueue`, local Core package
+product. English пустая Queue без операций и сохранения не является готовым P1.
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcodebuild \
+  -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Debug \
+  -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath /private/tmp/returnqueue-bootstrap-build \
+  CODE_SIGNING_ALLOWED=NO build
+```
+
+Для unsigned Device build: `-configuration Release -destination 'generic/platform=iOS'`
+с отдельной DerivedData. Это не подписанный архив или TestFlight release.
+Точные author/independent результаты и simulator smoke — в verification.md.

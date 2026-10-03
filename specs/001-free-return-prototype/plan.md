@@ -41,8 +41,9 @@ P2 — фото, Summary, локальные Settings и настройка на
 Settings открывается шестерёнкой. Новые экраны не повышают приоритет напоминаний и не блокируют P1.
 **Environment**: Xcode 26.3 (build 17C529) установлен по
 `/Applications/Xcode-26.3.0.app/Contents/Developer`; Apple Swift 6.2.4, iOS SDK 26.2
-и симуляторы доступны. Native Core XCTest 49/49 прошли; app target ещё не создан,
-поэтому сборка/запуск iOS пока не подтверждены (T001 остаётся открытым).
+и симуляторы доступны. Native Core XCTest 49/49 прошли. T001 bootstrap/project
+создан; независимые review, unsigned Simulator/Release builds и install/launch
+на iPhone 17 / iOS 26.3 прошли 2026-10-04. T001 принят, полные P1 workflows ещё открыты.
 
 ## Constitution Check
 
@@ -79,9 +80,9 @@ specs/001-free-return-prototype/
 Package.swift                         # Core + отдельный storage-draft target
 ReturnQueue/Core/                     # P1 value types и pure archive codec; review/check gates
 ReturnQueue/Services/                 # прежний filesystem draft; T005 не принят
-ReturnQueue/UI/                       # планируемые формы, очередь, результат, настройки
-ReturnQueue/ReturnQueueApp.swift       # планируемая точка входа
-ReturnQueue.xcodeproj/                # планируемый проект для Xcode
+ReturnQueue/UI/                       # минимальный RootView; формы/очередь впереди
+ReturnQueue/ReturnQueueApp.swift       # SwiftUI bootstrap без хранилища
+ReturnQueue.xcodeproj/                # ReturnQueue shared scheme, local Core product
 Tests/ReturnQueueCoreTests/            # P1 records/money/calendar/archive contract checks
 ReturnQueueUITests/                   # планируемые iOS-сценарии
 ```
@@ -90,8 +91,9 @@ ReturnQueueUITests/                   # планируемые iOS-сценар�
 предшествуют модели. Core codec не читает файлы; существующий filesystem draft
 перенесён в отдельный ReturnQueueStorageDraft target только для сборочного разделения.
 Он не реализует весь T005 и не доказывает блокировку сохранения после corrupt load.
-T001 блокирует iOS-сборку, но не независимые T002–T004. P1/P2 приложение остаётся
-непроверенным до соответствующих задач и device acceptance.
+T001 app bootstrap принят отдельным review/build/launch gate; независимые
+T002–T004 не зависят от iOS SDK. Полные P1/P2 workflows остаются
+непроверенными до соответствующих задач и device acceptance.
 
 **Structure Decision**: Core не зависит от UI и iOS-фреймворков; устройство и разрешения
 обрабатывает Services, действия пользователя — UI. Не создавать API/backend.

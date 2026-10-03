@@ -75,8 +75,10 @@ The first P1 Core slice now follows the exact JSON contract, optional fields,
 CalendarDay and reimbursement events. Its status is recorded in
 [slice verification](../specs/001-free-return-prototype/verification.md); independent
 review and native 49-test verification passed for this slice. The filesystem implementation is a preserved
-draft in ReturnQueueStorageDraft; ReturnStore, confirmed replacement, the app
-target and device workflow still need implementation.
+draft in ReturnQueueStorageDraft; ReturnStore, confirmed replacement and product
+workflows still need implementation. T001 adds an app target/shared scheme and
+minimal empty Queue; independent review/build/install/launch gates passed
+on 2026-10-04.
 
 Earlier host preparation on 2026-10-03: Spec Kit integration reports no missing or modified
 managed files; official Swift 6.2.1 formatter is available. Draft Swift files were
@@ -93,7 +95,8 @@ verification passed all 49 Core/JSON tests (exit 0); T002/T003/T004 are accepted
 Linux Swift 6.2.1 Docker attempts timed out in different places, even with output
 redirected; the infrastructure cause remains unresolved. They are failed attempts,
 not Linux acceptance. Core's required gate now uses the actual native toolchain;
-no app target, simulator app launch or release has been validated yet.
+the minimal T001 target passed independent unsigned builds and review/install/launch
+on 2026-10-04. No signed release or product workflow has been validated.
 
 GitLab configuration can be reviewed locally before choosing a GitLab project.
 The GitHub repository remains the known remote until the user chooses migration or

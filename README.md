@@ -30,9 +30,10 @@
 Core проверяет календарные дни, деньги/credit, поля, связи и ручной closure.
 Результаты независимого review и проверок — в [verification](specs/001-free-return-prototype/verification.md).
 Filesystem draft отделён в ReturnQueueStorageDraft; блокировка записи после corrupt load
-и atomic replacement ещё требуют T005/T012/T013. iPhone UI и Xcode-проект ещё не созданы.
-Полный Xcode 26.3 установлен, iOS SDK и симуляторы доступны; native Core XCTest
-прошли 49/49. Это не подтверждает сборку или запуск будущего iPhone app target.
+и atomic replacement ещё требуют T005/T012/T013. Созданы минимальные ReturnQueue.xcodeproj/shared scheme и SwiftUI пустая Queue
+без рабочих действий. Независимые review, unsigned Debug Simulator/Release iOS
+builds и install/launch smoke прошли: iPhone 17 / iOS 26.3, 4 октября 2026.
+Core XCTest ранее прошли 49/49. T005/T006, весь P1 и релиз не завершены.
 Синхронизируемые `../sources/` и родительский AGENTS.md остаются справочными материалами.
 
 ## Основа разработки iOS
@@ -72,8 +73,9 @@ $speckit-converge
 ```
 
 Спецификация бесплатного эксперимента готова в specs/001-free-return-prototype/.
-Текущий этап — первый проверяемый P1 Core/JSON slice. После его review и проверок
-предстоят durable storage, UI, iOS acceptance и пользовательская проверка пользы.
+Первый Core/JSON slice принят. Текущий этап — T001 минимальный iOS bootstrap с
+пройденными review/build/launch gates; далее durable storage, формы/очередь, полный
+iOS acceptance и пользовательская проверка пользы.
 В исходном ChatGPT workspace корень репозитория находится в папке `app`;
 установленные навыки могут потребовать открытия Codex именно на этой папке.
 В текущем чате агент может читать их инструкции напрямую; регистрация в интерфейсе

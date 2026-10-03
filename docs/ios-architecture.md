@@ -4,7 +4,9 @@ Status: implementation contract, reviewed against the product specification on
 2026-10-03. The first `ReturnQueue/Core/` model/JSON slice is reconciled with the
 current contracts and passed independent review/native 49-test verification. Filesystem and UI
 work remain pending; see [slice evidence](../specs/001-free-return-prototype/verification.md).
-This document does not establish an iOS build, working features or release readiness.
+T001 now has a minimal SwiftUI entry/empty Queue linking the local Core package.
+Independent review, unsigned Simulator/Release builds and actual simulator
+install/launch passed for T001 on 2026-10-04. Product workflows and release readiness are not established.
 
 The target is iPhone, iOS 17+, SwiftUI and Swift 6 language mode. The deployment
 target is a project assumption; the selected Xcode/SDK must be pinned and tested
@@ -46,7 +48,8 @@ durable storage, current calendar/time and the notification adapter. Keep pure
 selectors concrete. No service locator, universal base ViewModel, generic
 repository hierarchy or protocol for every type is needed.
 
-Planned organization, rather than files claimed to exist:
+Target organization; only Core, the storage draft and minimal T001 app/RootView
+currently exist. Product screen/ViewModel organization remains planned:
 
 ```text
 ReturnQueue/
@@ -61,7 +64,7 @@ ReturnQueue/
     DataBackups/         # Export, restore preview and replacement confirmation
     Summary/            # P2
     Settings/           # P2
-  ReturnQueueApp.swift   # Composition root, once the Xcode app target exists
+  ReturnQueueApp.swift   # Current minimal bootstrap; future service composition
 ```
 
 Split files by coherent responsibilities. A small display-only subview does not
