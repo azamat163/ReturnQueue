@@ -17,11 +17,12 @@
 - [Сравнение ниш](docs/niche-shortlist.md) и [план проверки](docs/validation-plan.md).
 - [Оценка Return Queue](.specify/assessments/return-queue/decision.md): нужны данные пользователей.
 - [Границы работы с возвратами и платежами](docs/return-boundaries.md).
-- [Требования бесплатной версии](docs/product-requirements.md): 45 требований, 6 историй.
-- [План и 24 задачи](specs/001-free-return-prototype/tasks.md); [бесплатный тест пользы](docs/prototype-test-plan.md).
-- [Бриф шести экранов для Figma](docs/figma-design-brief.md).
-- [Макет в Figma — 8 экранов](https://www.figma.com/design/SMVZHX6PVpx83cRfqM6S2o/Untitled?node-id=11-93): редактируемые слои и компоненты, English UI, SF Pro. Это статические макеты; работающего UI пока нет.
-- [Превью макета](docs/design/return-queue-preview.png); [идентификаторы Figma и проверка](docs/figma-design-state.json).
+- [Требования бесплатной версии](docs/product-requirements.md): 55 требований, 7 историй.
+- [План и 28 задач](specs/001-free-return-prototype/tasks.md); [бесплатный тест пользы](docs/prototype-test-plan.md).
+- [Бриф 11 макетов для Figma](docs/figma-design-brief.md).
+- [Макет в Figma — 11 экранов](https://www.figma.com/design/SMVZHX6PVpx83cRfqM6S2o/Untitled?node-id=11-93): редактируемые слои и компоненты, English UI, SF Pro. Это статические макеты; работающего UI пока нет.
+- [Summary, Settings и напоминание для вещи — концепты P2](https://www.figma.com/design/SMVZHX6PVpx83cRfqM6S2o/Untitled?node-id=22-249). Напоминания включаются пользователем и отменяются после сдачи; деньги и store credit в Summary разделены.
+- [Превью первого макета из 8 экранов](docs/design/return-queue-preview.png), [превью новых экранов P2](docs/design/return-queue-settings-preview.png); [идентификаторы Figma и проверка](docs/figma-design-state.json).
 
 Начат pure Swift core до финальной спецификации; он остаётся непроверенным черновиком,
 требует приведения к новой модели. iPhone UI и Xcode-проект ещё не созданы. При текущей конфигурации активны Apple Command Line

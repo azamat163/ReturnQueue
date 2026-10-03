@@ -43,7 +43,7 @@ Independent test: полный P1 roundtrip, повторный restore без �
 
 - [ ] T012 [P] [US4] Написать проверки unsupported version/duplicate ID/invalid date/size/atomic failure в Tests/ReturnQueueCoreTests/ArchiveTests.swift и PersistenceTests.swift.
 - [ ] T013 [US4] Реализовать validated export/preview/atomic replacement и raw corrupt-file export в ReturnQueue/Services/ArchiveService.swift.
-- [ ] T014 [US4] Добавить import preview, backup offer, confirm restore/delete и объяснение локального хранения в ReturnQueue/UI/DataSettingsView.swift.
+- [ ] T014 [US4] Добавить экран Data & backups с import preview, backup offer, confirm restore/delete и объяснение локального хранения в ReturnQueue/UI/DataSettingsView.swift.
 
 ## Phase 7: P1 Verification
 
@@ -60,13 +60,26 @@ Independent test: выбрать/отменить фото, экспортиро
 
 ## Phase 9: US6 — Напоминания (P2)
 
-Independent test: deny/allow, смена даты, сдача, closure/delete/restore отменяют старые уведомления.
+Independent test: global/per-item opt-in, deny/allow, смена даты/времени/часового пояса,
+сдача, closure/delete/restore отменяют старые уведомления; preview и tap правдивы.
 
-- [ ] T020 [US6] Реализовать сохраняемые настройки и lifecycle notifications в ReturnQueue/Services/ReminderService.swift с нейтральным текстом и будущими датами.
-- [ ] T021 [US6] Добавить opt-in и актуальное отображение разрешения в ReturnQueue/UI/ReminderSettingsView.swift.
-- [ ] T022 [US6] Проверить cancellation/reschedule/restore/timezone/denied permission в Tests/ReturnQueueCoreTests/ReminderPlanTests.swift и ReturnQueueUITests/ReminderTests.swift.
+- [ ] T020 [US6] Реализовать сохраняемые global/per-item настройки и lifecycle в ReturnQueue/Services/ReminderService.swift: default 09:00 local/1 day before, обязательный Return by для relative drop-off, отдельная ручная refund-check date, opt-in off по умолчанию; cancellation/reschedule после правок, статуса, переключателей, разрешения, travel/restore; нейтральный текст и только будущие даты.
+- [ ] T021 [US6] Добавить локальный профиль Settings без auth/email/avatar/backend, общий переключатель, честный permission status, defaults и per-item opt-in/preview в ReturnQueue/UI/SettingsView.swift и ReminderSettingsView.swift; связать существующий DataSettingsView.
+- [ ] T022 [US6] Проверить global off/denied permission/unknown deadline, defaults, cancellation/reschedule/restore/timezone и точный notification tap либо fallback Queue в Tests/ReturnQueueCoreTests/ReminderPlanTests.swift и ReturnQueueUITests/ReminderTests.swift.
 
-## Phase 10: Итоговая проверка
+## Phase 10: US7 — Summary (P2)
+
+Independent test: All time $210 money + $80 credit / 4 returns;
+Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересчитывают результат.
+
+- [ ] T025 [P] [US7] Описать и проверить Date received month filter, раздельные money/credit, distinct positive ReturnItem IDs, open/closed, unknown expectation, empty period и edits/deletes/restore в Tests/ReturnQueueCoreTests/SummaryTests.swift.
+- [ ] T026 [US7] Реализовать производный selector выбранного периода и Summary UI с This month/All time в ReturnQueue/Core/ReimbursementSummary.swift и ReturnQueue/UI/SummaryView.swift; встроить навигацию без изменения P1-процесса.
+- [ ] T027 [US6] Обновить P2 архив локальными global/default/per-item настройками; проверить roundtrip, отсутствие переноса OS permission и отмену старого расписания при replacement в ReturnQueue/Services/ArchiveService.swift и Tests/ReturnQueueCoreTests/ReminderArchiveTests.swift. Summary не сохранять как источник.
+- [ ] T028 [US6] [US7] Пройти на устройстве/симуляторе P2-сценарии Summary, Settings и item reminder: контрольные суммы/счётчики, permission/global states, календарные дни/local wall-clock travel и notification routing; записать только реальные результаты в verification.md.
+
+Номера T001–T024 сохранены. T025–T028 — новые задачи; все пока не выполнены.
+
+## Phase 11: Итоговая проверка
 
 - [ ] T023 Обновить README.md и docs/prototype-test-plan.md по реально готовому бесплатному объёму; не добавлять оплату или платный лимит.
 - [ ] T024 Проверить P2 после P1 и начать 14-дневный пользовательский тест из specs/001-free-return-prototype/quickstart.md; результаты сохранить в verification.md с числом реальных повторных возвратов.
@@ -75,7 +88,10 @@ Independent test: deny/allow, смена даты, сдача, closure/delete/re
 
 T001/T002 -> T003 -> T004–T014 -> T015/T016 = первый прототип.
 US2/US3/US4 опираются на одну модель и ReturnStore; changes в общих файлах последовательны.
-P2 начинается после P1: US5 T017–T019, US6 T020–T022; итог T023/T024.
+P2 начинается после P1: US5 T017–T019, US6 T020–T022 + T027,
+US7 T025/T026; T027 зависит от T017 и фиксированного Settings/reminder контракта.
+T025/T026 опираются на события US3; T028 после Summary/Settings/reminder/archive,
+затем итог T023/T024. T027 и фото-архив T018 не изменяют ArchiveService одновременно.
 
 ## Parallel Examples
 
@@ -88,5 +104,5 @@ P2 начинается после P1: US5 T017–T019, US6 T020–T022; ито�
 ## Implementation Strategy
 
 Рабочая сборка P1 -> проверка записи/очереди/итога/архива -> тест удобства -> решение
-о фото/напоминаниях P2. Корректность данных обязательна до реальных покупок;
+о фото, Summary и Settings/напоминаниях P2. Корректность данных обязательна до реальных покупок;
 пользовательские метрики фиксируются после рабочей сборки, не при завершении документации.

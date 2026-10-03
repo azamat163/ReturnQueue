@@ -1,8 +1,9 @@
 # Return Queue — бриф iPhone-макетов
 
 Дата: 2026-10-03. Основание: `../specs/001-free-return-prototype/spec.md` и
-`../specs/001-free-return-prototype/contracts/ui.md`. Это проектирование P1, а не
-доказательство спроса или работающая сборка. Фото и напоминания относятся к P2.
+`../specs/001-free-return-prototype/contracts/ui.md`. Базовые макеты описывают P1;
+добавлены Summary, Settings и Item reminder P2 по запросу пользователя.
+Дизайн не подтверждает спрос или готовую сборку. Фото и напоминания остаются P2.
 
 ## Характер и навигация
 
@@ -15,14 +16,18 @@
 холста, не ограничение поддержки устройств. Цели нажатия ≥44 pt; длинные названия,
 ошибки и увеличенный текст переносятся. Не прятать критические суммы многоточием.
 
-Главные вкладки: **`Queue`**, **`Waiting`**, **`History`**. Заголовок второй:
-**`Waiting for refund`**. Верхняя кнопка настроек открывает **`Data & settings`**.
+Нижняя панель дизайн-варианта содержит **ровно четыре вкладки**: **`Queue`**,
+**`Waiting`**, **`History`**, **`Summary`**. Заголовок Waiting — **`Waiting for refund`**.
+**`Settings`** открывается шестерёнкой вверху; отдельной вкладки Settings нет.
+Из Settings доступен **`Data & backups`**. Summary и расширенные настройки остаются P2.
 `Add return` доступна из Queue. Детали открываются нажатием строки. Add/Edit —
 модальная форма с `Cancel` и `Save`; вложенные формы не требуют новой вкладки.
 
-Подготовить шесть основных макетов ниже. Остальные состояния описать рядом;
-при необходимости вынести только два ключевых sheet-макета: запись поступления и
-предпросмотр восстановления. Итого максимум восемь основных визуальных макетов.
+Сохранить восемь существующих макетов: Queue, Add, Detail (To return), Waiting list,
+Refund details, History, Data & backups, Record reimbursement sheet.
+Добавить три P2-макета: Summary, Settings, Item reminder — **итого 11**.
+Ниже базовые восемь объединены в шесть разделов; preview restore и ошибки остаются
+дополнительными состояниями, без новых функций и отдельных основных экранов.
 
 ## 1. Queue
 
@@ -122,7 +127,7 @@ Sheet закрытия: `Close return`, выбор `Refund received`, `Partial r
 Пустое состояние: `Completed returns will appear here.` Исправление состояния
 сохраняет записанные поступления; пользователь видит их и после возвращения в Waiting.
 
-## 6. Data & settings — копии данных
+## 6. Data & backups — копии данных
 
 Раздел `Your data`: `Stored on this iPhone. No account or sync.`
 Действия `Export backup`, `Restore backup`; отдельно разрушительное `Delete all data`.
@@ -138,6 +143,75 @@ Sheet закрытия: `Close return`, выбор `Refund received`, `Partial r
 Состояние ошибки: `Couldn't restore this backup. Your current data hasn't changed.`
 Состояние повреждённой базы: `Couldn't read your data.`; действия `Try again`,
 `Export original data`. Обычные изменения недоступны до успешного чтения.
+
+## Дополнительный макет: Summary [P2]
+
+Заголовок `Summary`; активная вкладка Summary. Переключатель `This month` / `All time`.
+Для месячного вида подпись `Oct 2026`. Три понятных значения без графиков и объединения
+кредита с деньгами: `Money received`, `Store credit`, `Returns reimbursed`.
+Подпись `Based on reimbursements you've recorded.`
+
+| Выбранный период | Money received | Store credit | Returns reimbursed |
+|---|---|---|---|
+| This month — Oct 2026 | $160.00 | $80.00 | 4 |
+| All time | $210.00 | $80.00 | 4 |
+
+Основной макет показывает This month; второй режим — вариант того же экрана.
+Date received фильтруется по календарному месяцу: jacket Money $50 Sep 30 исключается
+из октября, credit $30 Oct 2 остаётся. Одна вещь считается однажды независимо от числа
+поступлений, участия cash/credit и активного/завершённого состояния. Grinder с unknown
+Expected refund участвует своими реальными $30. После правок/удалений/restore сводка
+обновляется. Не показывать прогнозов, долга, ожидаемой суммы или общей «экономии».
+Пустой период: `$0.00`, `$0.00`, `0` и `No reimbursements recorded for this period.`
+Это отсутствие событий в ручном журнале, а не банковский баланс.
+
+## Дополнительный макет: Settings [P2]
+
+Заголовок `Settings`; экран открыт через шестерёнку, отдельной вкладки нет.
+Секция `Local profile` с подписью
+`On this iPhone. No account or sync.` Без email/avatar, login и backend.
+Переход `Data & backups` ведёт в существующий экран копий и удаления.
+
+Секция `Reminders`: `Enable reminders` (default off), отдельно `Device permission`,
+`Default time` — `9:00 AM local`, `Default timing` — `1 day before` с альтернативой
+`On return date`. Defaults применяются к новым включениям; параметры существующих
+вещей не меняются молча. Permission может быть `Not requested`, `Allowed`,
+`Not allowed`; показывать реальное состояние, при отказе `Open iPhone Settings`.
+Общий on сам не включает все вещи и не подменяет разрешение устройства.
+
+Demo включённого состояния: Enable reminders on, permission Allowed; отдельный
+opt-in включён только у USB-C dock и Running shoes. В `Upcoming reminders`:
+
+- `USB-C dock` / `Return by Oct 5, 2026` / `Oct 4, 2026 · 9:00 AM local` / `Scheduled`.
+- `Running shoes` / `Return by Oct 6, 2026` / `Oct 5, 2026 · 9:00 AM local` / `Scheduled`.
+
+Макеты показывают настроенное состояние после явного выбора пользователя.
+Исходный default off и остальные состояния остаются в контракте; они не выдаются за текущую демо-конфигурацию.
+Подпись `Delivery depends on your iPhone settings.` Global off отменяет расписание,
+сохраняя item switches; denied или неизвестная дата дают `Not scheduled` с причиной.
+Upcoming относится к внутриприкладному расписанию; lock screen содержит только
+`You have a return to check. Open Return Queue for details.`
+
+## Дополнительный макет: Item reminder [P2]
+
+Из деталей Running shoes открыть `Item reminder`; switch `Remind me about this item`
+(default off; demo on после opt-in). `Return reminder`: `Return by Oct 6, 2026`,
+`Remind me` — `1 day before` / `On return date`, `Time` — `9:00 AM local`.
+Preview: `Running shoes`, `Oct 5, 2026 · 9:00 AM local`, `Scheduled` при успешном
+планировании и текущих разрешениях. `Cancel`, `Save`.
+
+Без Return by показать `Add a return date first.` и переход к редактированию,
+не вычислять срок. Для Waiting доступен `Check refund`, отдельные `Check date`
+и `Time`, заданные пользователем; Expected refund date не автозаполняет выбор.
+Глобальный off/denied/past date/неверный статус показывают Not scheduled с причиной.
+Сдача отменяет Return reminder; Check refund пользователь включает отдельно.
+
+Правки даты/времени/типа, переключателей, состояния, permission, travel и restore
+обновляют будущую цель; closed/kept/delete отменяют уведомления. Calendar Return by
+не сдвигается при путешествии, выбранные 9:00 AM остаются местными. Scheduled не
+гарантирует OS-доставку; past targets не воспроизводятся задним числом. Tap открывает
+именно вещь по ID, а если она удалена/недоступна — безопасную Queue. Backup переносит
+общие/отдельные настройки, но не permission или старые системные запросы.
 
 ## Подтверждения и дополнительные состояния
 
