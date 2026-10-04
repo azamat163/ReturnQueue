@@ -1,10 +1,10 @@
 # Tasks: Free Return Queue
 
 **Input**: [spec.md](spec.md), [plan.md](plan.md), [data-model.md](data-model.md), contracts/.
-**Status**: T001–T005 приняты: Core 49/49 native XCTest, T001 independent
-unsigned builds + simulator install/launch и T005 independent 77/77 native tests
-и обе unsigned iOS builds PASS. Приняты 5 задач, остальные 23 открыты;
-операционные UI/restore и полный P1 acceptance не завершены.
+**Status**: T001–T006 приняты. Последний T006 gate: независимые review,
+93/93 native tests, unsigned Debug/Release builds и 4/4 fresh-simulator UI tests
+PASS, включая actual disk inspection. Приняты 6 задач, остальные 22 открыты;
+полный P1 workflow/restore/P2 acceptance не завершён.
 **Tests**: Проверки прямо требуются FR-044. Приёмка на устройстве отдельна от core tests.
 **Organization**: Сначала P1, затем по результатам теста P2. Все функции бесплатны.
 
@@ -23,7 +23,7 @@ Independent test: минимальная запись без даты/суммы
 
 - [x] T004 [P] [US1] Написать проверки обязательных текстов, unknown != zero и day-only timezone в Tests/ReturnQueueCoreTests/RecordTests.swift.
 - [x] T005 [US1] Реализовать безопасное чтение/атомарную запись и блокировку при corrupt load в ReturnQueue/Services/ReturnRepository.swift; error состояния в ReturnQueue/Services/ReturnStore.swift.
-- [ ] T006 [US1] Создать минимальную форму, детали, отмену и ошибки сохранения в ReturnQueue/UI/ReturnEditor.swift и ReturnDetail.swift.
+- [x] T006 [US1] Создать минимальную форму, детали, отмену и ошибки сохранения в ReturnQueue/UI/ReturnEditorView.swift и ReturnDetailView.swift; доказательства в verification.md.
 
 ## Phase 4: US2 — Поездка по местам сдачи
 
@@ -81,7 +81,7 @@ Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересч
 - [ ] T028 [US6] [US7] Пройти на устройстве/симуляторе P2-сценарии Summary, Settings и item reminder: контрольные суммы/счётчики, permission/global states, календарные дни/local wall-clock travel и notification routing; записать только реальные результаты в verification.md.
 
 Номера T001–T024 сохранены. T025–T028 — новые задачи и остаются открытыми.
-Приняты только T001/T002/T003/T004/T005; доказательства — [verification.md](verification.md).
+Приняты только T001/T002/T003/T004/T005/T006; доказательства — [verification.md](verification.md).
 
 ## Phase 11: Итоговая проверка
 
@@ -96,6 +96,9 @@ Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересч
 T005 storage/actor принят после независимых review, native 77/77 tests и обеих
 unsigned iOS builds. Тесты JSON boundary и store failures покрывают часть T012;
 полный replacement/restore acceptance остаётся отдельной работой.
+T006 Add/edit/details и безопасный recovery share принят после 93 native tests,
+обеих unsigned builds и четырёх UI-сценариев на отдельном чистом симуляторе.
+Простая Queue даёт навигацию; группировка T008 и workflows T010/T011 ещё открыты.
 US2/US3/US4 опираются на одну модель и ReturnStore; changes в общих файлах последовательны.
 P2 начинается после P1: US5 T017–T019, US6 T020–T022 + T027,
 US7 T025/T026; T027 зависит от T017 и фиксированного Settings/reminder контракта.

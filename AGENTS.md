@@ -30,9 +30,13 @@ specs/001-free-return-prototype/contracts/storage.md. Independent review, native
 77-test suite and unsigned Simulator/Release builds passed on 2026-10-04.
 T001 now has a minimal SwiftUI empty Queue, Xcode project/shared ReturnQueue scheme
 and local Core package dependency. Independent review, unsigned Simulator/Release
-builds and simulator install/launch passed on 2026-10-04. Product UI remains
-unimplemented; T005 storage infrastructure is accepted. Full Xcode 26.3, iOS SDK and simulators are available; availability
-alone does not complete T001. Do not mark tasks complete merely because files exist. Verify the iOS app on a real SDK/device before reporting it works.
+builds and simulator install/launch passed on 2026-10-04. T006 adds real Add/edit/details,
+minimal list navigation and safe recovery sharing over the accepted storage.
+Independent review, native 93/93 tests, unsigned builds and four fresh-simulator UI
+scenarios passed on 2026-10-04. T001–T006 are accepted; 22 tasks remain open.
+The complete P1 workflow, full restore and P2 are pending. Full Xcode 26.3, iOS SDK
+and simulators are available. Do not mark tasks complete merely because files exist.
+Verify the iOS app on a real SDK/device before reporting it works.
 Never equate specification quality checks with implementation checks.
 
 For Swift/iOS work read docs/swift-style-guide.md and docs/ios-architecture.md.
@@ -44,5 +48,6 @@ Repo skills returnqueue-workflow, returnqueue-swift-ios and returnqueue-gitlab-r
 live alongside the installed Spec Kit skills in .agents/skills. Their maintained
 workflow is docs/development-harness.md. Do not rewrite Spec Kit managed skills.
 Run python3 tooling/harness.py check for foundation checks and verify for Core quality.
-GitLab CI/release configuration is local preparation until the destination, runners,
-Xcode app target and Apple signing are configured. Report actual execution separately.
+GitLab CI/release configuration is local preparation until the destination, runners
+and Apple signing are configured. The app target and shared UI-test scheme exist;
+remote CI/signing/release execution must be reported separately.

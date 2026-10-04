@@ -43,7 +43,8 @@ def check():
     for reference in re.findall(r"\bFR-\d+\b", tasks):
         if reference not in requirements:
             raise ValueError(f"Task references unknown requirement {reference}")
-    for name in ("plan.md", "data-model.md", "contracts/ui.md", "contracts/backup.md"):
+    for name in ("plan.md", "data-model.md", "contracts/ui.md", "contracts/backup.md",
+                 "contracts/storage.md", "contracts/presentation.md"):
         if not (feature / name).is_file():
             raise ValueError(f"Missing feature contract: {name}")
     json.loads((ROOT / ".swift-format").read_text())

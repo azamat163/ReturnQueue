@@ -11,8 +11,9 @@ profile, signing key, runner or public release was created by this harness work.
   alone is insufficient. The initial signing harness supports one app target and
   no extensions; additional executable targets need their own profile mappings.
 - Successful full-Xcode package tests and iOS simulator/device tests appropriate
-  to the actual app. The Core package passed 49 native tests; minimal bootstrap
-  builds/launch and future product workflows are separate evidence.
+  to the actual app. T006 passed 93 native package tests, unsigned Simulator/Release
+  builds and four UI scenarios on a fresh simulator. Broader P1/P2, physical-device
+  checks and signed distribution are separate evidence; see feature verification.
 - Apple Developer Program membership and a team that can distribute apps. Register
   the intended explicit Bundle ID and create the matching App Store Connect app
   record. Choose the Bundle ID before generating credentials.
@@ -38,8 +39,8 @@ Keep release switches protected and controlled by trusted maintainers.
 | `IOS_EPHEMERAL_RUNNER` | `1` only after disposable macOS VM isolation is established. A flag is not isolation. |
 | `DEVELOPER_DIR` | Actual full-Xcode developer directory, e.g. `/Applications/Xcode_26.2.app/Contents/Developer`. |
 | `XCODE_VERSION` | Exact installed version, e.g. `26.2`; this is an example, not an asserted latest release. |
-| `IOS_PROJECT` | `ReturnQueue.xcodeproj`, after T001 is committed. |
-| `IOS_SCHEME` | `ReturnQueue`; future app tests/a test plan are still required before release. |
+| `IOS_PROJECT` | Committed `ReturnQueue.xcodeproj`, shared scheme includes UI tests. |
+| `IOS_SCHEME` | К `ReturnQueue` уже подключены четыре UI-теста. Выбор тестового устройства на runner, подпись и полная приёмка релиза ещё требуются. |
 | `IOS_TEST_DESTINATION` | Explicit available simulator destination, e.g. `platform=iOS Simulator,id=<installed-simulator-UUID>`. Select it after inspecting `xcrun simctl list devices available` on the runner. |
 | `IOS_TEAM_ID` | The ten-character distribution team ID. |
 | `IOS_BUNDLE_ID` | The explicit app Bundle ID, identical in the app record and provisioning profile. |

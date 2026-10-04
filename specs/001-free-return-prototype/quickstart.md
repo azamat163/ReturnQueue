@@ -1,16 +1,17 @@
 # Проверка первого бесплатного прототипа
 
-Статус: первый P1 Core/JSON slice принят после независимого review и 49 XCTest;
-готового iPhone-приложения нет. Команды ниже не подтверждают готовность UI.
+Статус: T001–T006 приняты. Рабочие Add/edit/details и recovery share прошли
+независимые review, 93 native tests и четыре сценария на чистом iPhone-симуляторе.
+Полные P1/P2 workflows и релиз ещё не готовы.
 
 ## Что понадобится
 
-Для независимого ядра — Swift 6+. Для iPhone-сборки и сценариев интерфейса — полный Xcode
+Для package tests — Swift 6+ и macOS 14+ (Observation Presentation). Для iPhone-сборки и сценариев интерфейса — полный Xcode
 с iOS 17+ SDK и симулятором или тестовым iPhone. Xcode 26.3 установлен; iOS SDK 26.2
-и симуляторы доступны. Минимальный app target/пустая Queue создан; авторские
-независимые unsigned builds/review/install/launch прошли (T001 принят 2026-10-04).
+и симуляторы доступны. App target/shared scheme подключает Core/Storage/Presentation;
+unsigned builds и UI XCTest прошли независимо (T006 принят 2026-10-04).
 
-Из корня выбранного рабочего checkout, после реализации первого slice:
+Из корня выбранного рабочего checkout:
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcrun swift test
@@ -20,13 +21,25 @@ DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcrun swift test
 Gregorian CalendarDay, ручной closure и строгий JSON v1 roundtrip/отказ decode.
 T005 отдельно проверяет ReturnQueueStorage/ReturnStore: bounded read, atomic write,
 corrupt-save blocking, stale edits и raw recovery copy. Независимые native 77/77 tests
-и обе unsigned iOS builds прошли; T005 принят 2026-10-04. Это не проверка перезапуска
-рабочего iOS UI или полного restore: T006/T012/T013 ещё открыты.
+и обе unsigned iOS builds прошли; T005 принят 2026-10-04. T006 добавляет 16 session/editor
+tests (общий набор 93) и четыре actual UI cases с перезапуском/отменой/ошибками.
+Полный backup/restore T012/T013 остаётся открытым.
 Реальные результаты и ограничения сохраняются в [verification.md](verification.md).
 Принятый pure package gate — native XCTest с Apple Swift 6.2.4 в полном Xcode.
 Тесты Linux fallback (Swift 6.2.1 Docker) завершались timeout в разных местах;
 их причина не установлена, Linux PASS/support не заявляется. Native Core PASS
 не заменяет отдельные app build и iPhone acceptance.
+
+Для UI XCTest выбери отдельный чистый симулятор и замени ID ниже; shared scheme
+содержит ReturnQueueUITests. Его DEBUG fixtures используют отдельные UUID-папки,
+не production-default архив. Signing для simulator проверки не требуется.
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcodebuild test \
+  -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Debug \
+  -destination 'platform=iOS Simulator,id=YOUR_ISOLATED_TEST_DEVICE_ID' \
+  -parallel-testing-enabled NO CODE_SIGNING_ALLOWED=NO
+```
 
 ## Сценарии P1 на устройстве
 

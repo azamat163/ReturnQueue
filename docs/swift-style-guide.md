@@ -98,8 +98,8 @@ they do not expose filesystem paths or implementation details.
 From the repository root, using the selected Swift 6 toolchain:
 
 ```sh
-swift format lint --strict --configuration .swift-format --recursive Package.swift ReturnQueue Tests
-swift format format --in-place --configuration .swift-format --recursive Package.swift ReturnQueue Tests
+swift format lint --strict --configuration .swift-format --recursive Package.swift ReturnQueue Tests ReturnQueueUITests
+swift format format --in-place --configuration .swift-format --recursive Package.swift ReturnQueue Tests ReturnQueueUITests
 ```
 
 Formatting changes files; lint checks only. When an iOS test target or another

@@ -2,7 +2,7 @@
 
 **Branch**: none | **Date**: 2026-10-03 | **Spec**: [spec.md](spec.md)
 
-**Input**: Бесплатный прототип P1; фото, Summary и Settings/напоминания P2. T001–T005 приняты; рабочий UI остаётся T006 и далее.
+**Input**: Бесплатный прототип P1; фото, Summary и Settings/напоминания P2. T001–T006 приняты; Add/edit/details и recovery share проверены, остальные P1/P2 workflows впереди.
 
 ## Summary
 
@@ -15,7 +15,7 @@ P2 добавляет Summary по ручным событиям и локаль
 ## Technical Context
 
 **Language/Version**: Swift 6 language tools; совместимость iOS 17+.
-**Primary Dependencies**: SwiftUI/Foundation; PhotosUI и UserNotifications только P2.
+**Primary Dependencies**: SwiftUI/Foundation/Observation; PhotosUI и UserNotifications только P2. iOS 17+; SwiftPM host baseline macOS 14 для actual observable Presentation models.
 **Architecture**: SwiftUI + MVVM, экранные @MainActor/@Observable ViewModels,
 одна committed app-session snapshot и внедряемые Services; чистое Core.
 Границы и порядок durable commit: [ios-architecture.md](../../docs/ios-architecture.md).
@@ -79,25 +79,31 @@ specs/001-free-return-prototype/
 ### Source Code (repository root)
 
 ```text
-Package.swift                         # Core + ReturnQueueStorage + separate storage tests
+Package.swift                         # Core + Storage + Foundation/Observation Presentation
 ReturnQueue/Core/                     # P1 value types и pure archive codec; review/check gates
 ReturnQueue/Services/                 # bounded/atomic storage + actor; T005 accepted
-ReturnQueue/UI/                       # минимальный RootView; формы/очередь впереди
-ReturnQueue/ReturnQueueApp.swift       # SwiftUI bootstrap без хранилища
-ReturnQueue.xcodeproj/                # ReturnQueue shared scheme, local Core/Storage products
+ReturnQueue/Presentation/             # shared AppSession + value draft/editor model
+ReturnQueue/UI/                       # Queue navigation, Add/edit/details, recovery share
+ReturnQueue/Resources/                # named colors + exact Figma package/pin SVGs
+ReturnQueue/ReturnQueueApp.swift       # production Application Support storage composition
+ReturnQueue.xcodeproj/                # shared app/UI-test scheme, local package products
 Tests/ReturnQueueCoreTests/            # P1 records/money/calendar/archive contract checks
 Tests/ReturnQueueStorageTests/         # T005 persistence/recovery/failure checks
-ReturnQueueUITests/                   # планируемые iOS-сценарии
+Tests/ReturnQueuePresentationTests/    # 16 actual session/editor tests
+ReturnQueueUITests/                   # 4 isolated simulator workflows + actual disk
 ```
 
 **First slice boundary**: Точный [JSON v1](contracts/backup.md) и [schema](contracts/backup.schema.json)
 предшествуют модели. Core codec не читает файлы; существующий filesystem draft
 был перенесён из Core как черновик. T005 заменяет его ReturnQueueStorage и actor
 ReturnStore по [storage contract](contracts/storage.md), принятому после независимых
-review и verification. Это не завершает restore или рабочий UI.
+review и verification. Полный restore остаётся открытым.
 T001 app bootstrap принят отдельным review/build/launch gate; независимые
 T002–T004 не зависят от iOS SDK. Полные P1/P2 workflows остаются
 непроверенными до соответствующих задач и device acceptance.
+T006 [presentation contract](contracts/presentation.md) принят после независимого
+review, 93 native tests, unsigned builds и четырёх simulator UI сценариев.
+Это Add/edit/details и recovery share; grouping, progression и P2 ещё не приняты.
 
 **Structure Decision**: Core не зависит от UI и iOS-фреймворков; устройство и разрешения
 обрабатывает Services, действия пользователя — UI. Не создавать API/backend.

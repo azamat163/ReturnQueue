@@ -4,11 +4,13 @@ Status: implementation contract, reviewed against the product specification on
 2026-10-03. The first `ReturnQueue/Core/` model/JSON slice is reconciled with the
 current contracts and passed independent review/native 49-test verification.
 T005 storage infrastructure passed independent review, native 77 tests and both
-unsigned iOS builds on 2026-10-04. Product UI/restore remain pending; see
+unsigned iOS builds on 2026-10-04. T006 Add/edit/details and recovery share passed
+distinct review, independent native 93 tests, both builds and four fresh-simulator
+UI scenarios on that date. Complete workflows/restore remain pending; see
 [slice evidence](../specs/001-free-return-prototype/verification.md).
 T001 now has a minimal SwiftUI entry/empty Queue linking the local Core package.
 Independent review, unsigned Simulator/Release builds and actual simulator
-install/launch passed for T001 on 2026-10-04. Product workflows and release readiness are not established.
+install/launch passed for T001 on 2026-10-04. Broader P1/P2 workflows and release readiness are not established.
 
 The target is iPhone, iOS 17+, SwiftUI and Swift 6 language mode. The deployment
 target is a project assumption; the selected Xcode/SDK must be pinned and tested
@@ -190,4 +192,17 @@ or service interface exists. Review Swift changes against
 The synchronous persistence boundary and actor state/revision contract are fixed in
 [storage.md](../specs/001-free-return-prototype/contracts/storage.md).
 `ReturnQueueStorage` owns filesystem access; the app links this local package product
-to compile its iOS protection branch. UI composition remains T006.
+to compile its iOS protection branch. T006 composes real Application Support
+persistence with the shared MainActor AppSession and value draft/editor model.
+
+## T006 presentation API
+
+[presentation.md](../specs/001-free-return-prototype/contracts/presentation.md)
+defines captured editor revisions, the central activity gate, durable success and
+retained drafts on failure. Foundation/Observation Presentation lives in its own
+SwiftPM product (macOS 14 host baseline; iOS 17 unchanged); SwiftUI views stay in
+the app target. Recovery/DEBUG fixture IO lives in actor services. RootView retains
+pending recovery-copy ownership and retry controls until cleanup succeeds.
+The shared Xcode scheme includes four real UI tests; package tests cover 16
+Presentation cases alongside 49 Core and 28 Storage cases. Full replacement/restore,
+grouped queue and reimbursement workflows remain separate tasks.

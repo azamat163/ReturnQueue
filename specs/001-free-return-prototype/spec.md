@@ -314,4 +314,7 @@ $50 jacket исключаются из октября, но октябрьски
   Xcode 26.3, Apple Swift 6.2.4, iOS SDK и симуляторы доступны; T001 bootstrap
   прошёл независимые unsigned builds и simulator install/launch 2026-10-04.
 - Ядро приведено к точному P1 контракту и принято после независимого review и
-  native 49/49 XCTest. Это не доказывает готовность рабочих UI/storage или удобство продукта.
+  native 49/49 XCTest. Следующие T005/T006 приняты отдельно: 93 package tests,
+  unsigned builds и четыре UI-сценария на чистом симуляторе проверили storage,
+  Add/edit/details и recovery share. Полные P1/P2 workflows и пользовательская
+  проверка пользы остаются впереди; отдельные Core tests их не доказывают.

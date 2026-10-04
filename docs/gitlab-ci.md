@@ -2,10 +2,10 @@
 
 The repository now has a [pipeline](../.gitlab-ci.yml) and executable release scripts.
 It has not been connected to a GitLab project or runner, and no Apple credentials
-have been configured. The Core/model/archive slice passed independent native
-49-test verification. T001 minimal local iOS bootstrap passed independent unsigned
-build/install/launch verification on 2026-10-04; production
-release prerequisites remain unmet. See [actual evidence](../specs/001-free-return-prototype/verification.md).
+have been configured for this project. T001–T006 passed scoped independent checks:
+current native package suite 93 tests, unsigned Debug/Release builds and four real
+UI tests on a fresh simulator (2026-10-04). Production release prerequisites remain
+unmet; no remote GitLab job is claimed. See [actual evidence](../specs/001-free-return-prototype/verification.md).
 
 ## Checks available now
 
@@ -116,7 +116,9 @@ bootstrap Bundle ID is `com.azamat163.returnqueue`; it is provisional and unregi
 Any future `IOS_BUNDLE_ID`, App Store record and provisioning profile must agree
 before signing. No team or credentials are stored in the project.
 
-The bootstrap scheme has Release Archive configuration but no app test target yet.
-`archive-ios.sh` deliberately requires app tests/a test plan before signing, so the
-bootstrap does not enable release jobs. The Linux Core image remains 6.2.1 and has
+At the T001 bootstrap handoff, the scheme had Release Archive configuration and
+no app test target. T006 now adds ReturnQueueUITests with four actual UI scenarios
+to that shared scheme. `archive-ios.sh` requires tests/a test plan before signing;
+their existence alone does not configure credentials or enable release jobs.
+The Linux Core image remains 6.2.1 and has
 not been remotely validated; the native author's Xcode toolchain is a separate check.

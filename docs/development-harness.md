@@ -99,7 +99,17 @@ Linux Swift 6.2.1 Docker attempts timed out in different places, even with outpu
 redirected; the infrastructure cause remains unresolved. They are failed attempts,
 not Linux acceptance. Core's required gate now uses the actual native toolchain;
 the minimal T001 target passed independent unsigned builds and review/install/launch
-on 2026-10-04. No signed release or product workflow has been validated.
+on 2026-10-04. At that bootstrap handoff no signed release or product workflow
+had been validated.
+
+T005 subsequently passed independent storage review, 77 native tests and both
+unsigned builds. T006 Add/edit/details and safe recovery share now passed distinct
+review, 93 native tests and four actual UI scenarios on a fresh simulator, including
+disk inspection and root Figma/native visual comparison (2026-10-04). Package
+Presentation uses Foundation/Observation and a macOS 14 host baseline; iOS remains
+17+. The shared scheme contains ReturnQueueUITests. Full P1/P2 acceptance, physical
+device protection, full restore and signed release remain open; evidence is in
+the feature verification document.
 
 GitLab configuration can be reviewed locally before choosing a GitLab project.
 The GitHub repository remains the known remote until the user chooses migration or
