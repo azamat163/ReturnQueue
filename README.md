@@ -29,11 +29,15 @@
 [JSON schema](specs/001-free-return-prototype/contracts/backup.schema.json) фиксирует форму;
 Core проверяет календарные дни, деньги/credit, поля, связи и ручной closure.
 Результаты независимого review и проверок — в [verification](specs/001-free-return-prototype/verification.md).
-Filesystem draft отделён в ReturnQueueStorageDraft; блокировка записи после corrupt load
-и atomic replacement ещё требуют T005/T012/T013. Созданы минимальные ReturnQueue.xcodeproj/shared scheme и SwiftUI пустая Queue
+T005 реализует ReturnQueueStorage и actor ReturnStore по
+[storage contract](specs/001-free-return-prototype/contracts/storage.md): безопасное
+чтение, atomic write, блокировка после read failure и потоковая исходная recovery copy.
+Независимые review, native 77/77 XCTest и обе unsigned iOS сборки прошли 4 октября 2026.
+Полный backup/restore остаётся T012/T013.
+Созданы минимальные ReturnQueue.xcodeproj/shared scheme и SwiftUI пустая Queue
 без рабочих действий. Независимые review, unsigned Debug Simulator/Release iOS
 builds и install/launch smoke прошли: iPhone 17 / iOS 26.3, 4 октября 2026.
-Core XCTest ранее прошли 49/49. T005/T006, весь P1 и релиз не завершены.
+Core XCTest ранее прошли 49/49. Приняты T001–T005; рабочие формы T006, весь P1 и релиз не завершены.
 Синхронизируемые `../sources/` и родительский AGENTS.md остаются справочными материалами.
 
 ## Основа разработки iOS

@@ -87,7 +87,7 @@ reviewer or verifier in this slice published changes.
 
 Date: **2026-10-04, Europe/Moscow**. Status: **T001 accepted by root** after
 independent review, both unsigned builds and simulator install/launch smoke passed.
-Current ledger: T001/T002/T003/T004 complete; 24 tasks remain open.
+At the T001 handoff: T001/T002/T003/T004 complete; 24 tasks remained open.
 The previous Core acceptance above remains valid; Core sources and its tests
 are unchanged in this slice.
 
@@ -99,7 +99,7 @@ com.azamat163.returnqueue. Apple registration, team and signing credentials
 have not been configured for this project.
 
 No persistence, return editor, operational actions or P2 functionality is provided.
-T005/T006 and full P1 acceptance remain open. Release Archive configuration is
+At that handoff T005/T006 and full P1 acceptance remained open. Release Archive configuration is
 prepared, but the scheme has no app test target yet; the existing release script
 continues to block distribution until simulator app tests/test plan and signing
 configuration are supplied. The GitLab YAML/release scripts are unchanged.
@@ -175,3 +175,85 @@ Root retained a stable task artifact outside the repository:
 This acceptance proves bootstrap compile/install/launch only. It does not complete
 T005 persistence, T006 editor, T008 grouping/navigation, T015 accessibility or T016
 full P1 workflows. No signed archive, IPA, TestFlight or GitLab pipeline was run.
+
+## T005 storage slice — 2026-10-04
+
+Status: **T005 accepted by root** after separate review and final independent
+verification. Five tasks are accepted (T001–T005); the other 23 remain open.
+Frozen Core/wire files and app UI
+behavior are unchanged. The local app target links the new ReturnQueueStorage
+product so builds compile its iOS protection branch.
+
+Author unsigned builds passed, exit 0, using Xcode 26.3 / Apple Swift 6.2.4:
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcodebuild \
+  -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Debug \
+  -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath /private/tmp/rq-t005-author-debug-sp88px1q/DerivedData \
+  CODE_SIGNING_ALLOWED=NO build
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcodebuild \
+  -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Release \
+  -destination 'generic/platform=iOS' \
+  -derivedDataPath /private/tmp/rq-t005-author-release-wc_j356l/DerivedData \
+  CODE_SIGNING_ALLOWED=NO build
+```
+
+Logs: `/private/tmp/rq-t005-author-debug-sp88px1q/build.log` and
+`/private/tmp/rq-t005-author-release-wc_j356l/build.log`.
+Final author native XCTest passed: **77 tests, 0 failures**, 8.301 seconds, exit 0;
+49 Core + 12 repository + 16 store tests. All three permission-specific tests ran
+without skips as an unprivileged user. Those tests explicitly skip only UID 0;
+directory/malformed/version/size cases always run. The reviewer identified this
+portability issue; the owner split/fixed the cases before the final author run.
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcrun swift test \
+  --scratch-path /private/tmp/rq-t005-author-tests-lbrjv4kd/build \
+  --cache-path /private/tmp/rq-t005-author-tests-lbrjv4kd/cache \
+  --config-path /private/tmp/rq-t005-author-tests-lbrjv4kd/config \
+  --security-path /private/tmp/rq-t005-author-tests-lbrjv4kd/security
+```
+
+Log: `/private/tmp/rq-t005-author-tests-lbrjv4kd/swift-test.log`.
+Strict repository Swift formatter lint and diff check passed. Independent reviewer
+accepted the final Services/tests diff after the focused portability correction;
+root reviewed Package/project/docs integration without findings.
+
+Final independent native XCTest **PASS**: 77/77, 0 failures, 0 skips, UID 501,
+Apple Swift 6.2.4; build 18.59 seconds, test suite 8.298 seconds, exit 0.
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcrun swift test \
+  --scratch-path /private/tmp/rq-t005-final-tests-81e72lxo/build \
+  --cache-path /private/tmp/rq-t005-final-tests-81e72lxo/cache \
+  --config-path /private/tmp/rq-t005-final-tests-81e72lxo/config \
+  --security-path /private/tmp/rq-t005-final-tests-81e72lxo/security
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcodebuild \
+  -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Debug \
+  -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath /private/tmp/rq-t005-final-debug-u5mpa7nk/DerivedData \
+  CODE_SIGNING_ALLOWED=NO build
+DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcodebuild \
+  -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Release \
+  -destination 'generic/platform=iOS' \
+  -derivedDataPath /private/tmp/rq-t005-final-release-2p0sju1h/DerivedData \
+  CODE_SIGNING_ALLOWED=NO build
+```
+
+Both independent unsigned builds **PASS**, exit 0. Logs:
+`/private/tmp/rq-t005-final-tests-81e72lxo/swift-test.log`,
+`/private/tmp/rq-t005-final-debug-u5mpa7nk/build.log`,
+`/private/tmp/rq-t005-final-release-2p0sju1h/build.log`.
+Independent strict lint, foundation harness, diff check, project plist and shared
+scheme checks passed. Services/tests were authored separately and reviewed by
+`harness_review`; root independently reviewed integration before acceptance.
+The verifier authored the storage tests and ran final verification after the
+distinct review; neither implementation owner was the sole reviewer.
+
+These checks prove host persistence semantics and compilation of iOS protection
+code. Runtime device file protection, app persistence UI, full replacement/restore,
+signing and release readiness remain separate checks. T012/T013/T014/T016 remain
+open. No Linux support/PASS or remote GitLab run is claimed. Documentation-only
+acceptance changes after these gates require scoped consistency checks, not a new
+Core runtime run.

@@ -2,8 +2,10 @@
 
 Status: implementation contract, reviewed against the product specification on
 2026-10-03. The first `ReturnQueue/Core/` model/JSON slice is reconciled with the
-current contracts and passed independent review/native 49-test verification. Filesystem and UI
-work remain pending; see [slice evidence](../specs/001-free-return-prototype/verification.md).
+current contracts and passed independent review/native 49-test verification.
+T005 storage infrastructure passed independent review, native 77 tests and both
+unsigned iOS builds on 2026-10-04. Product UI/restore remain pending; see
+[slice evidence](../specs/001-free-return-prototype/verification.md).
 T001 now has a minimal SwiftUI entry/empty Queue linking the local Core package.
 Independent review, unsigned Simulator/Release builds and actual simulator
 install/launch passed for T001 on 2026-10-04. Product workflows and release readiness are not established.
@@ -48,8 +50,9 @@ durable storage, current calendar/time and the notification adapter. Keep pure
 selectors concrete. No service locator, universal base ViewModel, generic
 repository hierarchy or protocol for every type is needed.
 
-Target organization; only Core, the storage draft and minimal T001 app/RootView
-currently exist. Product screen/ViewModel organization remains planned:
+Target organization: Core, T005 storage and minimal T001 app/RootView are accepted.
+Product screen/ViewModel
+organization remains planned:
 
 ```text
 ReturnQueue/
@@ -124,10 +127,10 @@ The first Core slice replaces the earlier mandatory amount/location/timestamp
 deadline, `refunded` status and single `refundReceivedCents` with optional
 CalendarDay fields, closure outcomes and a money/store-credit event ledger.
 The exact P1 marker/schema rejects the unreleased draft wire format. Filesystem
-access now sits in the separate `ReturnQueueStorageDraft` target under Services.
-Its preserved load/save is a compilation seam, not T005 corruption blocking,
-confirmed replacement or a serialized ReturnStore implementation. Updated Core
-tests must pass the separate review/verification gates before acceptance.
+access sits in the separate `ReturnQueueStorage` target under Services. T005
+replaces the preserved draft with bounded/atomic persistence and serialized
+ReturnStore, accepted after independent review/verification. Full restore and UI
+acceptance remain separate tasks.
 
 ## P1 and P2 isolation
 
@@ -181,3 +184,10 @@ spec/plan/tasks before implementation, preserves stable requirement/task IDs and
 adds evidence to the relevant task. Do not mark P2 tasks complete because a design
 or service interface exists. Review Swift changes against
 [the project style guide](swift-style-guide.md).
+
+## T005 storage API
+
+The synchronous persistence boundary and actor state/revision contract are fixed in
+[storage.md](../specs/001-free-return-prototype/contracts/storage.md).
+`ReturnQueueStorage` owns filesystem access; the app links this local package product
+to compile its iOS protection branch. UI composition remains T006.

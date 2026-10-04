@@ -2,7 +2,7 @@
 
 **Branch**: none | **Date**: 2026-10-03 | **Spec**: [spec.md](spec.md)
 
-**Input**: Бесплатный прототип P1; фото, Summary и Settings/напоминания P2. Текущий slice — P1 JSON/model/record tests (T002–T004); UI/storage остаются последующими задачами.
+**Input**: Бесплатный прототип P1; фото, Summary и Settings/напоминания P2. T001–T005 приняты; рабочий UI остаётся T006 и далее.
 
 ## Summary
 
@@ -43,7 +43,8 @@ Settings открывается шестерёнкой. Новые экраны 
 `/Applications/Xcode-26.3.0.app/Contents/Developer`; Apple Swift 6.2.4, iOS SDK 26.2
 и симуляторы доступны. Native Core XCTest 49/49 прошли. T001 bootstrap/project
 создан; независимые review, unsigned Simulator/Release builds и install/launch
-на iPhone 17 / iOS 26.3 прошли 2026-10-04. T001 принят, полные P1 workflows ещё открыты.
+на iPhone 17 / iOS 26.3 прошли 2026-10-04. T005 storage принят после независимого
+review, native 77/77 tests и обеих unsigned iOS builds; полные P1 workflows ещё открыты.
 
 ## Constitution Check
 
@@ -68,6 +69,7 @@ specs/001-free-return-prototype/
   data-model.md
   contracts/ui.md
   contracts/backup.md
+  contracts/storage.md
   contracts/backup.schema.json
   quickstart.md
   tasks.md
@@ -77,20 +79,22 @@ specs/001-free-return-prototype/
 ### Source Code (repository root)
 
 ```text
-Package.swift                         # Core + отдельный storage-draft target
+Package.swift                         # Core + ReturnQueueStorage + separate storage tests
 ReturnQueue/Core/                     # P1 value types и pure archive codec; review/check gates
-ReturnQueue/Services/                 # прежний filesystem draft; T005 не принят
+ReturnQueue/Services/                 # bounded/atomic storage + actor; T005 accepted
 ReturnQueue/UI/                       # минимальный RootView; формы/очередь впереди
 ReturnQueue/ReturnQueueApp.swift       # SwiftUI bootstrap без хранилища
-ReturnQueue.xcodeproj/                # ReturnQueue shared scheme, local Core product
+ReturnQueue.xcodeproj/                # ReturnQueue shared scheme, local Core/Storage products
 Tests/ReturnQueueCoreTests/            # P1 records/money/calendar/archive contract checks
+Tests/ReturnQueueStorageTests/         # T005 persistence/recovery/failure checks
 ReturnQueueUITests/                   # планируемые iOS-сценарии
 ```
 
 **First slice boundary**: Точный [JSON v1](contracts/backup.md) и [schema](contracts/backup.schema.json)
 предшествуют модели. Core codec не читает файлы; существующий filesystem draft
-перенесён в отдельный ReturnQueueStorageDraft target только для сборочного разделения.
-Он не реализует весь T005 и не доказывает блокировку сохранения после corrupt load.
+был перенесён из Core как черновик. T005 заменяет его ReturnQueueStorage и actor
+ReturnStore по [storage contract](contracts/storage.md), принятому после независимых
+review и verification. Это не завершает restore или рабочий UI.
 T001 app bootstrap принят отдельным review/build/launch gate; независимые
 T002–T004 не зависят от iOS SDK. Полные P1/P2 workflows остаются
 непроверенными до соответствующих задач и device acceptance.

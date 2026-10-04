@@ -1,9 +1,10 @@
 # Tasks: Free Return Queue
 
 **Input**: [spec.md](spec.md), [plan.md](plan.md), [data-model.md](data-model.md), contracts/.
-**Status**: T001–T004 приняты: Core 49/49 native XCTest и T001 independent
-unsigned builds + simulator install/launch PASS. Остальные 24 задачи открыты;
-операционные UI/storage и полный P1 acceptance не завершены.
+**Status**: T001–T005 приняты: Core 49/49 native XCTest, T001 independent
+unsigned builds + simulator install/launch и T005 independent 77/77 native tests
+и обе unsigned iOS builds PASS. Приняты 5 задач, остальные 23 открыты;
+операционные UI/restore и полный P1 acceptance не завершены.
 **Tests**: Проверки прямо требуются FR-044. Приёмка на устройстве отдельна от core tests.
 **Organization**: Сначала P1, затем по результатам теста P2. Все функции бесплатны.
 
@@ -21,7 +22,7 @@ unsigned builds + simulator install/launch PASS. Остальные 24 зада�
 Independent test: минимальная запись без даты/суммы сохраняется и переживает перезапуск.
 
 - [x] T004 [P] [US1] Написать проверки обязательных текстов, unknown != zero и day-only timezone в Tests/ReturnQueueCoreTests/RecordTests.swift.
-- [ ] T005 [US1] Реализовать безопасное чтение/атомарную запись и блокировку при corrupt load в ReturnQueue/Services/ReturnRepository.swift; error состояния в ReturnQueue/Services/ReturnStore.swift.
+- [x] T005 [US1] Реализовать безопасное чтение/атомарную запись и блокировку при corrupt load в ReturnQueue/Services/ReturnRepository.swift; error состояния в ReturnQueue/Services/ReturnStore.swift.
 - [ ] T006 [US1] Создать минимальную форму, детали, отмену и ошибки сохранения в ReturnQueue/UI/ReturnEditor.swift и ReturnDetail.swift.
 
 ## Phase 4: US2 — Поездка по местам сдачи
@@ -43,7 +44,7 @@ Independent test: $50 cash + $30 credit при ожидании $100, затем
 
 Independent test: полный P1 roundtrip, повторный restore без копий, invalid archive не меняет базу.
 
-- [ ] T012 [P] [US4] Написать проверки unsupported version/duplicate ID/invalid date/size/atomic failure в Tests/ReturnQueueCoreTests/ArchiveTests.swift и PersistenceTests.swift.
+- [ ] T012 [P] [US4] Написать проверки unsupported version/duplicate ID/invalid date/size/atomic failure в Tests/ReturnQueueCoreTests/ArchiveTests.swift и Tests/ReturnQueueStorageTests/; полный replacement/restore acceptance ещё открыт.
 - [ ] T013 [US4] Реализовать validated export/preview/atomic replacement и raw corrupt-file export в ReturnQueue/Services/ArchiveService.swift.
 - [ ] T014 [US4] Добавить экран Data & backups с import preview, backup offer, confirm restore/delete и объяснение локального хранения в ReturnQueue/UI/DataSettingsView.swift.
 
@@ -80,7 +81,7 @@ Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересч
 - [ ] T028 [US6] [US7] Пройти на устройстве/симуляторе P2-сценарии Summary, Settings и item reminder: контрольные суммы/счётчики, permission/global states, календарные дни/local wall-clock travel и notification routing; записать только реальные результаты в verification.md.
 
 Номера T001–T024 сохранены. T025–T028 — новые задачи и остаются открытыми.
-Приняты только T001/T002/T003/T004; доказательства — [verification.md](verification.md).
+Приняты только T001/T002/T003/T004/T005; доказательства — [verification.md](verification.md).
 
 ## Phase 11: Итоговая проверка
 
@@ -92,9 +93,9 @@ Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересч
 Для полного приложения: T001/T002 -> T003 -> T004–T014 -> T015/T016.
 Первый независимый slice T002 -> T003 -> T004 + codec contract tests можно проверить
 без iOS SDK. T001 app bootstrap принят отдельным review/build/launch gate;
-T005 остаётся открытым, а перенос filesystem draft из Core
-в Services не завершает T005. Тесты JSON boundary покрывают часть T012; его
-atomic failure/persistence acceptance остаётся отдельной работой.
+T005 storage/actor принят после независимых review, native 77/77 tests и обеих
+unsigned iOS builds. Тесты JSON boundary и store failures покрывают часть T012;
+полный replacement/restore acceptance остаётся отдельной работой.
 US2/US3/US4 опираются на одну модель и ReturnStore; changes в общих файлах последовательны.
 P2 начинается после P1: US5 T017–T019, US6 T020–T022 + T027,
 US7 T025/T026; T027 зависит от T017 и фиксированного Settings/reminder контракта.

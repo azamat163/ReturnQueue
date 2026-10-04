@@ -120,7 +120,9 @@ P2 один декодируемый снимок до 15 MiB на запись,
 полного refund не является совместимым форматом. Точный P1 JSON v1 и Swift API
 фиксированы в [backup contract](contracts/backup.md); старый draft v1 отклоняется
 по marker/полям, не мигрирует молча. Первые Core/codec тесты проверяют эту модель
-независимо от UI. Filesystem draft вынесен в Services/ReturnQueueStorageDraft;
-его наличие не завершает T005 или полное atomic replacement acceptance.
+независимо от UI. Filesystem boundary вынесен в Services/ReturnQueueStorage;
+T005 [storage API](contracts/storage.md) принят после независимых review, native
+77 тестов и unsigned iOS builds. Полный restore
+и UI acceptance остаются последующими задачами.
 Модель принята после независимых review и native XCTest (49/49 PASS);
 это не доказывает готовность UI/storage или всего iOS-приложения.

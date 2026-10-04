@@ -83,8 +83,10 @@ expectation остаётся `nil`, полнота не выводится; outc
   никакой filesystem операции или частичного результата внутри codec.
 
 P2 fields (attachment/reminder/settings/summary) не входят в v1 и отклоняются как
-unknown fields. Filesystem draft отделяется в `ReturnQueueStorageDraft` target;
-его прежние load/save не доказывают T005 corrupt-save blocking/atomic replacement.
+unknown fields. Filesystem boundary принадлежит отдельному `ReturnQueueStorage`;
+[storage contract](storage.md) фиксирует T005 read/write/recovery и actor API.
+T005 принят после independent review, native 77 тестов и unsigned iOS builds;
+полноценный restore — последующая задача.
 
 Проверка всего содержимого: структура, версия, уникальные ID, связи событий, известные
 enum, реальные даты, допустимые текст/суммы/валюта. Если хотя бы один объект недопустим,

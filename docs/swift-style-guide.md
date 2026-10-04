@@ -113,5 +113,6 @@ and durability behavior, cancellation/isolation, accessibility and appropriate
 tests. Core behavior uses meaningful XCTest scenarios and temporary storage.
 An Xcode simulator/device check remains mandatory for iOS feature acceptance.
 The first Core/model/codec slice reconciles the event ledger and passed independent
-review/native 49-test verification. The separate filesystem draft and future
-ReturnStore/UI still require their own durability and iOS acceptance checks.
+review/native 49-test verification. T005 ReturnQueueStorage/ReturnStore passed
+independent review, native 77-test suite and both unsigned iOS builds. Product UI still requires its own
+iOS acceptance checks.

@@ -9,6 +9,7 @@
 		100000000000000000000001 /* ReturnQueueApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000001 /* ReturnQueueApp.swift */; };
 		100000000000000000000002 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000002 /* RootView.swift */; };
 		100000000000000000000003 /* ReturnQueueCore in Frameworks */ = {isa = PBXBuildFile; productRef = 900000000000000000000001 /* ReturnQueueCore */; };
+		100000000000000000000004 /* ReturnQueueStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 900000000000000000000003 /* ReturnQueueStorage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,7 +22,7 @@
 		300000000000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
-			files = (100000000000000000000003 /* ReturnQueueCore in Frameworks */,);
+			files = (100000000000000000000003 /* ReturnQueueCore in Frameworks */, 100000000000000000000004 /* ReturnQueueStorage in Frameworks */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -60,7 +61,7 @@
 			buildRules = ();
 			dependencies = ();
 			name = ReturnQueue;
-			packageProductDependencies = (900000000000000000000001 /* ReturnQueueCore */,);
+			packageProductDependencies = (900000000000000000000001 /* ReturnQueueCore */, 900000000000000000000003 /* ReturnQueueStorage */,);
 			productName = ReturnQueue;
 			productReference = 200000000000000000000003 /* ReturnQueue.app */;
 			productType = "com.apple.product-type.application";
@@ -220,6 +221,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 900000000000000000000002 /* XCLocalSwiftPackageReference . */;
 			productName = ReturnQueueCore;
+		};
+		900000000000000000000003 /* ReturnQueueStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 900000000000000000000002 /* XCLocalSwiftPackageReference . */;
+			productName = ReturnQueueStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

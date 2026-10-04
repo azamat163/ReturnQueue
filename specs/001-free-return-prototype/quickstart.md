@@ -18,8 +18,10 @@ DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer xcrun swift test
 
 Первый slice проверяет обязательные/неизвестные поля, деньги и store credit,
 Gregorian CalendarDay, ручной closure и строгий JSON v1 roundtrip/отказ decode.
-Это не доказательство перезапуска iOS, atomic replacement или corrupt-save blocking:
-filesystem draft находится в ReturnQueueStorageDraft; T005/T012/T013 ещё открыты.
+T005 отдельно проверяет ReturnQueueStorage/ReturnStore: bounded read, atomic write,
+corrupt-save blocking, stale edits и raw recovery copy. Независимые native 77/77 tests
+и обе unsigned iOS builds прошли; T005 принят 2026-10-04. Это не проверка перезапуска
+рабочего iOS UI или полного restore: T006/T012/T013 ещё открыты.
 Реальные результаты и ограничения сохраняются в [verification.md](verification.md).
 Принятый pure package gate — native XCTest с Apple Swift 6.2.4 в полном Xcode.
 Тесты Linux fallback (Swift 6.2.1 Docker) завершались timeout в разных местах;

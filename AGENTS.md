@@ -24,11 +24,14 @@ P1 must be independently usable; photos and reminders are P2.
 
 Current stage: first P1 Core/model/archive-codec slice accepted after independent
 review and native 49/49 XCTest; evidence lives in specs/001-free-return-prototype/verification.md.
-Core has no filesystem access. Preserved filesystem code lives in the separate
-ReturnQueueStorageDraft target and is not T005 acceptance. T001 now has a minimal SwiftUI empty Queue, Xcode project/shared ReturnQueue scheme
+Core has no filesystem access. T005 replaced the filesystem draft with
+ReturnQueueStorage and a serialized ReturnStore; the contract lives in
+specs/001-free-return-prototype/contracts/storage.md. Independent review, native
+77-test suite and unsigned Simulator/Release builds passed on 2026-10-04.
+T001 now has a minimal SwiftUI empty Queue, Xcode project/shared ReturnQueue scheme
 and local Core package dependency. Independent review, unsigned Simulator/Release
-builds and simulator install/launch passed on 2026-10-04. Product UI/persistence remain
-unimplemented. Full Xcode 26.3, iOS SDK and simulators are available; availability
+builds and simulator install/launch passed on 2026-10-04. Product UI remains
+unimplemented; T005 storage infrastructure is accepted. Full Xcode 26.3, iOS SDK and simulators are available; availability
 alone does not complete T001. Do not mark tasks complete merely because files exist. Verify the iOS app on a real SDK/device before reporting it works.
 Never equate specification quality checks with implementation checks.
 

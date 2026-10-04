@@ -74,9 +74,12 @@ apply layout. Keep broad formatting changes separate from domain behavior.
 The first P1 Core slice now follows the exact JSON contract, optional fields,
 CalendarDay and reimbursement events. Its status is recorded in
 [slice verification](../specs/001-free-return-prototype/verification.md); independent
-review and native 49-test verification passed for this slice. The filesystem implementation is a preserved
-draft in ReturnQueueStorageDraft; ReturnStore, confirmed replacement and product
-workflows still need implementation. T001 adds an app target/shared scheme and
+review and native 49-test verification passed for this slice. T005 supplies
+ReturnQueueStorage and ReturnStore against the fixed
+[storage contract](../specs/001-free-return-prototype/contracts/storage.md);
+independent review, native 77/77 tests and unsigned Simulator/Release builds
+passed on 2026-10-04. Restore and product workflows
+remain later tasks. T001 adds an app target/shared scheme and
 minimal empty Queue; independent review/build/install/launch gates passed
 on 2026-10-04.
 
