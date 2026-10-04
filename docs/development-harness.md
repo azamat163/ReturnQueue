@@ -111,6 +111,13 @@ Presentation uses Foundation/Observation and a macOS 14 host baseline; iOS remai
 device protection, full restore and signed release remain open; evidence is in
 the feature verification document.
 
+T007/T008 subsequently passed distinct review, independent 106 native tests, both
+unsigned builds and five UI scenarios on a fresh simulator, including actual disk
+inspection and root Queue visual comparison. The explicit local harness verify
+also passed eight offline checks and all 106 native tests. Current acceptance is
+T001–T008 (8 of 28 tasks); 20 tasks remain open. Full P1/P2 and release gates above
+remain open; see [evidence](../specs/001-free-return-prototype/verification.md).
+
 GitLab configuration can be reviewed locally before choosing a GitLab project.
 The GitHub repository remains the known remote until the user chooses migration or
 CI integration. Runner registration, repository sync, protected refs/variables,

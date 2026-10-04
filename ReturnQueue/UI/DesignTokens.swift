@@ -10,6 +10,7 @@ enum DesignTokens {
   static let tint = Color("ColorTint")
   static let accent = Color("ColorAccent")
   static let line = Color("ColorLine")
+  static let warning = Color("ColorWarning")
 }
 
 enum DetailFormatting {

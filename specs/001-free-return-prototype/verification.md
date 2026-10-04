@@ -366,3 +366,148 @@ independent Add/Detail/native-share screenshots; stable files reside in the same
 visualization directory as above (`returnqueue-recovery-share.png` added).
 No physical-device protection, full backup/restore, P2, remote GitLab, signing or
 release acceptance is inferred from these scoped results.
+
+## T007/T008 Queue: tests-first preparation (2026-10-04)
+
+Base: accepted T006 commit `f08bf00a60bfa8682556165eef5dbe999b84bbd6`.
+Root approved the pure selector/Presentation contract in `contracts/queue.md`;
+an independent test author materialized seven Core Queue tests and six
+QueueViewModel tests before implementation. Fresh native SwiftPM run gave the
+expected **RED**, exit 1, elapsed 11.49 seconds: new ReturnQueueSelector/
+QueueViewModel symbols were absent. Log:
+`/private/tmp/rq-t007-tests-first-red-f6c6e2dq/swift-test.log`.
+Strict scoped formatter and diff check passed for those test files.
+
+This is intentional tests-first evidence, not a passing implementation gate.
+At this tests-first checkpoint T007/T008 were open: source, author checks, distinct
+review, independent native/build/five UI scenarios and rendered acceptance were pending.
+Root obtained Queue Figma context/screenshot and the exact 16pt pin before edits;
+native mapping is recorded in `docs/design/t008-native-mapping.md`.
+
+### Author checks and first UI diagnosis
+
+Evidence root: `/private/tmp/rq-t008-author-_2dbit5z/`. Environment:
+`DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer`, Apple Swift 6.2.4;
+root-created iPhone 17 simulator `53F66FB0-A7CC-4BA8-ACC8-6E2DAD58FCFC`.
+The xcresult reports runtime iOS 26.3.1, build 23D8133.
+
+Native **106/106 PASS**, 0 failures, suite 5.785 seconds, elapsed 20.970 seconds;
+`native.log` and `native-result.json` preserve the command/result with isolated
+SwiftPM scratch/cache/config/security paths. Generic unsigned Debug Simulator
+build **PASS**, elapsed 10.601 seconds; Release generic iOS build **PASS**,
+elapsed 12.912 seconds. Logs/results: `debug-build.log`, `debug-result.json`,
+`release-build.log`, `release-result.json`; both use `CODE_SIGNING_ALLOWED=NO`.
+
+First all-five UI run **FAIL**, exit 65, elapsed 342.224 seconds: four cases passed,
+including Queue grouping/date ordering/merchant/Cancel/durable regroup/relaunch;
+recovery failed tapping background Retry after native share Close.
+`UIResults.xcresult`, `ui-test.log` and exported `attachments/` are retained.
+The actual failure hierarchy still contained ActivityListView/header.closeButton;
+existence of Retry alone did not prove the share had disappeared or Retry was hittable.
+Disk proof `failed-recovery-and-trip-disk.json` confirmed the corrupted original,
+valid original backup and byte-equal raw copy were retained. The failed attempt
+did not demonstrate cleanup; the production-default archive was absent.
+
+The test owner added bounded native-close disappearance and Retry enabled/hittable
+checks with diagnostics. No sleep, repeated Close tap or weakened recovery assertion
+was introduced; no app/Storage source changed. Focused reviewer approved the helper.
+Targeted real recovery **PASS**, exit 0, elapsed 41.823 seconds:
+`RecoveryResults.xcresult`, `recovery-test.log`, `recovery-result.json`.
+The final all-five author run subsequently **PASS**, exit 0, suite 317.990 seconds,
+elapsed 326.517 seconds: `FinalUIResults.xcresult`, `final-ui-test.log` and
+`final-ui-result.json`. Final attachments are exported under `final-attachments/`.
+`final-disk-proof.json` retains the five actual fixture archives (1/1/1/3/1 records),
+with the edited trip's locations/dates, the recovered archive byte-equal to its
+valid backup and the failed-write record unchanged. The production-default
+archive remains absent. Only the previously documented first failed-attempt
+raw copy remained on this reused author device; current successful exports were
+cleaned. This is not proof of an empty recovery directory on a fresh device.
+
+Distinct final code review **PASS**, no actionable findings; all 57 final source
+fingerprints matched after the author run (`source-after-author.json`). Independent
+QA was still pending at this author handoff; acceptance is recorded below.
+The original 57 source hashes are in `source-fingerprints.json`; the reviewed helper
+changes only `ReturnQueueUITests.swift` in `source-fingerprints-fixed.json`.
+
+Root compared actual Queue normal/larger text against Figma/native mapping and
+accepted that visual scope. Stable screenshots: task visualization directory
+`returnqueue-queue.png` and `returnqueue-queue-large-text.png`; report
+`/private/tmp/returnqueue-t008-root-visual.json`. This scoped check does not close
+T015 or claim full VoiceOver/Dynamic Type acceptance.
+
+
+### Independent final verification and acceptance (2026-10-04)
+
+Distinct final code review passed without actionable findings. A separate verifier
+then checked the same 57 source fingerprints on a fresh isolated iPhone 17
+simulator `4562D4B1-F158-4B51-9C08-94084146BAE5`, using full Xcode 26.3,
+Apple Swift 6.2.4 and UID 501. Evidence root:
+`/private/tmp/rq-t008-final-verifier-biwm3z_m/`; the final machine-readable verdict
+is `verification-report.json`.
+
+| Required check | Actual result |
+| --- | --- |
+| Native package XCTest | 106/106, 0 failures, 0 skips; 56 Core + 28 Storage + 22 Presentation; suite 5.751 s, elapsed 19.103 s, exit 0 |
+| Generic Simulator Debug build | Unsigned PASS, elapsed 22.916 s, exit 0 |
+| Generic iOS Release build | Unsigned PASS, elapsed 12.489 s, exit 0 |
+| Fresh-simulator UI XCTest | 5/5, 0 failures, 0 skips; suite 317.367 s, elapsed 333.913 s, exit 0 |
+| Explicit local harness verify | 8 offline release-tool checks + 106 native tests, 0 failures/skips; native suite 5.626 s, elapsed 19.693 s, exit 0 |
+| Static checks | Recursive strict formatter, foundation harness, project plist, shared UI-test scheme, diff and exact 16pt pin hash PASS |
+
+All commands ran from the implementation checkout with
+`DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer`:
+
+```sh
+swift test --scratch-path /private/tmp/rq-t008-final-verifier-biwm3z_m/native/build \
+  --cache-path /private/tmp/rq-t008-final-verifier-biwm3z_m/native/cache \
+  --config-path /private/tmp/rq-t008-final-verifier-biwm3z_m/native/config \
+  --security-path /private/tmp/rq-t008-final-verifier-biwm3z_m/native/security
+xcodebuild -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Debug \
+  -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath /private/tmp/rq-t008-final-verifier-biwm3z_m/debug-derived \
+  CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Release \
+  -destination 'generic/platform=iOS' \
+  -derivedDataPath /private/tmp/rq-t008-final-verifier-biwm3z_m/release-derived \
+  CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project ReturnQueue.xcodeproj -scheme ReturnQueue -configuration Debug \
+  -destination 'platform=iOS Simulator,id=4562D4B1-F158-4B51-9C08-94084146BAE5' \
+  -derivedDataPath /private/tmp/rq-t008-final-verifier-biwm3z_m/debug-derived \
+  CODE_SIGNING_ALLOWED=NO \
+  -resultBundlePath /private/tmp/rq-t008-final-verifier-biwm3z_m/UIResults.xcresult \
+  -parallel-testing-enabled NO test
+SWIFT_VERSION=6.2.4 RQ_SWIFTPM_DISABLE_SANDBOX=1 python3 tooling/harness.py verify
+```
+
+The harness invocation had `CI` unset; its explicit local sandbox opt-in does not
+change the CI default. Exact invocations and outcomes are retained in
+`native-command.json`, `debug-command.json`, `release-command.json`,
+`ui-command.json`, `harness-command.json` and corresponding result JSONs.
+Logs: `native.log`, `debug.log`, `release.log`, `ui.log`, `harness-verify.log`;
+`UIResults.xcresult` and four exported screenshots preserve actual runtime evidence.
+
+`disk-verification.json` confirmed five isolated UUID archive roots with seven
+records: the trip's edited location/date persisted after relaunch; the earlier
+edited 7999-cent/date/location record remained correct; failed write retained
+Original sneakers. Recovered original bytes matched the backup. On this fresh
+device the recovery temporary directory was empty and the production-default
+archive did not exist. This final proof is separate from the first author failure
+and its retained orphan copy described above.
+
+The 57 reviewed source fingerprints matched before and after all checks.
+`cleanup.json` confirms the verifier's own simulator shutdown/delete returned
+exit 0 and the device was absent afterward; only its own build caches were removed.
+Logs, JSON proofs, xcresult and PNGs remain. Root also removed its separate author
+device after evidence capture; `/private/tmp/returnqueue-t008-author-simulator.json`
+and the author's `cache-cleanup.json` retain that cleanup evidence.
+
+Root accepted T007/T008: **T001–T008 completed, 8 of 28 tasks; 20 open**. Root
+reviewed the final independent grouped Queue screenshot; the stable normal image
+`returnqueue-queue.png` now comes from final QA, while
+`returnqueue-queue-large-text.png` retains the author-device larger-text check.
+Both are in the task visualization directory; provenance is in
+`/private/tmp/returnqueue-t008-root-visual.json`.
+
+Full P1/P2, T015/T016, physical-device protection, full backup/restore, remote GitLab,
+Apple signing, TestFlight and release acceptance remain open. These results accept
+only this Queue slice and the regression checks above.

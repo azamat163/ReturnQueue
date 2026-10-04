@@ -6,7 +6,10 @@ current contracts and passed independent review/native 49-test verification.
 T005 storage infrastructure passed independent review, native 77 tests and both
 unsigned iOS builds on 2026-10-04. T006 Add/edit/details and recovery share passed
 distinct review, independent native 93 tests, both builds and four fresh-simulator
-UI scenarios on that date. Complete workflows/restore remain pending; see
+UI scenarios on that date. T007/T008 subsequently passed distinct review, native
+106 tests, both unsigned builds and five fresh-simulator UI scenarios, adding the
+planned-only grouped Queue. T001–T008 are accepted; 20 tasks remain open. Complete
+workflows/restore remain pending; see
 [slice evidence](../specs/001-free-return-prototype/verification.md).
 T001 now has a minimal SwiftUI entry/empty Queue linking the local Core package.
 Independent review, unsigned Simulator/Release builds and actual simulator
@@ -203,6 +206,15 @@ retained drafts on failure. Foundation/Observation Presentation lives in its own
 SwiftPM product (macOS 14 host baseline; iOS 17 unchanged); SwiftUI views stay in
 the app target. Recovery/DEBUG fixture IO lives in actor services. RootView retains
 pending recovery-copy ownership and retry controls until cleanup succeeds.
-The shared Xcode scheme includes four real UI tests; package tests cover 16
-Presentation cases alongside 49 Core and 28 Storage cases. Full replacement/restore,
-grouped queue and reimbursement workflows remain separate tasks.
+At the T006 handoff, the shared scheme contained four real UI tests and the package
+covered 16 Presentation, 49 Core and 28 Storage cases. Full replacement/restore
+and reimbursement workflows remain separate tasks.
+
+## T007/T008 Queue API
+
+[queue.md](../specs/001-free-return-prototype/contracts/queue.md) fixes the pure
+planned-only selector, location identity and deterministic group/item ordering.
+QueueViewModel projects the latest committed AppSession snapshot and refreshes the
+local Gregorian day without archive writes. Accepted storage, AppSession and
+editor contracts are unchanged. The current suite has 56 Core, 28 Storage and 22
+Presentation cases (106 total), plus five real UI scenarios in the shared scheme.

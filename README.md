@@ -20,7 +20,7 @@
 - [Требования бесплатной версии](docs/product-requirements.md): 55 требований, 7 историй.
 - [План и 28 задач](specs/001-free-return-prototype/tasks.md); [бесплатный тест пользы](docs/prototype-test-plan.md).
 - [Бриф 11 макетов для Figma](docs/figma-design-brief.md).
-- [Макет в Figma — 11 экранов](https://www.figma.com/design/SMVZHX6PVpx83cRfqM6S2o/Untitled?node-id=11-93): редактируемые слои и компоненты, English UI, SF Pro. Add/Details реализованы с нативными адаптациями; остальные экраны остаются макетами.
+- [Макет в Figma — 11 экранов](https://www.figma.com/design/SMVZHX6PVpx83cRfqM6S2o/Untitled?node-id=11-93): редактируемые слои и компоненты, English UI, SF Pro. Add/Details/Queue реализованы с нативными адаптациями; остальные экраны остаются макетами.
 - [Summary, Settings и напоминание для вещи — концепты P2](https://www.figma.com/design/SMVZHX6PVpx83cRfqM6S2o/Untitled?node-id=22-249). Напоминания включаются пользователем и отменяются после сдачи; деньги и store credit в Summary разделены.
 - [Превью первого макета из 8 экранов](docs/design/return-queue-preview.png), [превью новых экранов P2](docs/design/return-queue-settings-preview.png); [идентификаторы Figma и проверка](docs/figma-design-state.json).
 
@@ -41,8 +41,14 @@ T006 добавляет рабочие Add/edit/details, простую Queue д
 и все четыре UI-сценария на чистом iPhone 17 / iOS 26.3 прошли 4 октября 2026;
 проверены перезапуск, отмена/редактирование, ошибки ввода/записи и Retry/передача исходного файла.
 Add/Details сверены с Figma: [нативные адаптации](docs/design/t006-native-mapping.md).
-Приняты T001–T006 (6 задач); 22 остаются открытыми. Группировка очереди, сдача/учёт
-возмещений, полный backup/restore и P2 ещё впереди. Весь P1 и релиз не завершены.
+T007/T008 добавляют очередь только To return по месту сдачи, с отдельным магазином,
+введёнными датами, unknown last и нейтральной past-отметкой. Отдельные review,
+106/106 native tests, обе unsigned builds и 5/5 UI scenarios на новом симуляторе
+прошли 4 октября 2026; сохранённая правка места/даты переживает перезапуск.
+[Контракт очереди](specs/001-free-return-prototype/contracts/queue.md),
+[Figma/native mapping](docs/design/t008-native-mapping.md).
+Приняты T001–T008 (8 задач); 20 остаются открытыми. Сдача/учёт возмещений,
+полный backup/restore и P2 ещё впереди. Весь P1 и релиз не завершены.
 Синхронизируемые `../sources/` и родительский AGENTS.md остаются справочными материалами.
 
 ## Основа разработки iOS

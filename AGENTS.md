@@ -33,7 +33,11 @@ and local Core package dependency. Independent review, unsigned Simulator/Releas
 builds and simulator install/launch passed on 2026-10-04. T006 adds real Add/edit/details,
 minimal list navigation and safe recovery sharing over the accepted storage.
 Independent review, native 93/93 tests, unsigned builds and four fresh-simulator UI
-scenarios passed on 2026-10-04. T001–T006 are accepted; 22 tasks remain open.
+scenarios passed on 2026-10-04. T007/T008 now add planned-only location grouping,
+deterministic day/creation/UUID ordering and a local-day past badge; contract:
+specs/001-free-return-prototype/contracts/queue.md. Independent review, native
+106/106 tests, both unsigned builds and five fresh-simulator UI scenarios passed.
+T001–T008 are accepted; 20 tasks remain open.
 The complete P1 workflow, full restore and P2 are pending. Full Xcode 26.3, iOS SDK
 and simulators are available. Do not mark tasks complete merely because files exist.
 Verify the iOS app on a real SDK/device before reporting it works.

@@ -4,6 +4,66 @@ import XCTest
 
 @MainActor
 final class ReturnQueueUITests: XCTestCase {
+  func testQueueGroupsLocationsOrdersEnteredDatesAndMovesOnlyAfterSavedEdit() {
+    let app = launch(root: UUID().uuidString)
+    defer { app.terminate() }
+    // Create the unknown-date record first: date ordering must beat creation ordering.
+    let jacket = createTripItem(
+      app, title: "Trip jacket", merchant: "Store B", location: "ups STORE market st")
+    let sneakers = createTripItem(
+      app, title: "Trip sneakers", merchant: "Store A", location: "UPS Store Market St",
+      returnBy: "2020-01-01")
+    let backpack = createTripItem(
+      app, title: "Trip backpack", merchant: "Store A", location: "USPS Mission St",
+      returnBy: "2026-10-05")
+    let initialOrder = [sneakers, jacket, backpack]
+    let initialGroups = [groupID(jacket), groupID(backpack)]
+    assertTripQueue(
+      app, rows: initialOrder, groups: initialGroups, members: [[sneakers, jacket], [backpack]])
+    XCTAssertTrue(app.buttons[sneakers].label.contains("Store A"))
+    XCTAssertTrue(app.buttons[jacket].label.contains("Store B"))
+    XCTAssertTrue(app.buttons[jacket].label.contains("Return by: Not set"))
+    XCTAssertFalse(app.buttons[jacket].label.contains("$0.00"))
+    XCTAssertTrue(app.buttons[sneakers].label.contains("Past your entered date"))
+    attach(app, name: "04-Queue-grouped")
+
+    app.buttons[jacket].tap()
+    XCTAssertTrue(app.buttons["detail.edit"].waitForExistence(timeout: 5))
+    app.buttons["detail.edit"].tap()
+    expandOptional(app)
+    enter(app, field: "dropOffLocation", text: "USPS Mission St")
+    app.buttons["editor.cancel"].tap()
+    backToQueue(app)
+    assertTripQueue(
+      app, rows: initialOrder, groups: initialGroups, members: [[sneakers, jacket], [backpack]])
+
+    app.buttons[jacket].tap()
+    XCTAssertTrue(app.buttons["detail.edit"].waitForExistence(timeout: 5))
+    app.buttons["detail.edit"].tap()
+    expandOptional(app)
+    enter(app, field: "dropOffLocation", text: "USPS Mission St")
+    enter(app, field: "returnBy", text: "2021-01-01")
+    save(app)
+    backToQueue(app)
+    let savedOrder = [sneakers, jacket, backpack]
+    // Moving the earliest-created item also changes the destination group's representative.
+    let savedGroups = [groupID(sneakers), groupID(jacket)]
+    assertTripQueue(
+      app, rows: savedOrder, groups: savedGroups, members: [[sneakers], [jacket, backpack]])
+    XCTAssertEqual(itemRows(app).matching(identifier: jacket).count, 1)
+    app.terminate()
+    app.launch()
+    assertTripQueue(
+      app, rows: savedOrder, groups: savedGroups, members: [[sneakers], [jacket, backpack]])
+    app.buttons[jacket].tap()
+    XCTAssertTrue(app.buttons["detail.edit"].waitForExistence(timeout: 5))
+    XCTAssertTrue(app.staticTexts["USPS Mission St"].exists)
+    XCTAssertTrue(
+      app.descendants(matching: .any).matching(
+        NSPredicate(format: "label CONTAINS %@", "Jan 1, 2021")
+      ).firstMatch.exists)
+  }
+
   func testCreateRelaunchCancelAndSaveEditUsesActualDisk() {
     let root = UUID().uuidString
     let app = launch(root: root)
@@ -128,8 +188,20 @@ final class ReturnQueueUITests: XCTestCase {
     XCTAssertTrue(filename.exists, "Native sharing did not receive the original archive copy")
     attach(app, name: "03-Recovery-native-share")
     close.tap()
-    XCTAssertTrue(app.buttons["load.retry"].waitForExistence(timeout: 5))
-    app.buttons["load.retry"].tap()
+    let dismissed = XCTNSPredicateExpectation(
+      predicate: NSPredicate(format: "exists == false"), object: close)
+    let dismissal = XCTWaiter.wait(for: [dismissed], timeout: 5)
+    if dismissal != .completed { diagnose(app, name: "Native-share-dismissal") }
+    XCTAssertEqual(dismissal, .completed, "Native sharing sheet did not dismiss")
+    let retry = app.buttons["load.retry"]
+    // Retry is already present behind the sheet; its existence alone does not mean it can act.
+    let ready = XCTNSPredicateExpectation(
+      predicate: NSPredicate(format: "exists == true AND hittable == true AND enabled == true"),
+      object: retry)
+    let readiness = XCTWaiter.wait(for: [ready], timeout: 5)
+    if readiness != .completed { diagnose(app, name: "Recovery-retry-readiness") }
+    XCTAssertEqual(readiness, .completed, "Retry remained blocked after native sharing dismissed")
+    retry.tap()
     XCTAssertTrue(itemRows(app).firstMatch.waitForExistence(timeout: 5))
     XCTAssertTrue(app.buttons["queue.add"].isEnabled)
     openFirstItem(app)
@@ -166,6 +238,54 @@ final class ReturnQueueUITests: XCTestCase {
     enter(app, field: "title", text: title)
     enter(app, field: "merchant", text: "Example Store")
     save(app)
+  }
+
+  private func createTripItem(
+    _ app: XCUIApplication, title: String, merchant: String, location: String,
+    returnBy: String? = nil
+  ) -> String {
+    openAdd(app)
+    enter(app, field: "title", text: title)
+    enter(app, field: "merchant", text: merchant)
+    expandOptional(app)
+    enter(app, field: "dropOffLocation", text: location)
+    if let returnBy { enter(app, field: "returnBy", text: returnBy) }
+    save(app)
+    let row = itemRows(app).matching(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
+    XCTAssertTrue(row.waitForExistence(timeout: 5))
+    return row.identifier
+  }
+
+  private func groupID(_ rowID: String) -> String {
+    rowID.replacingOccurrences(of: "queue.item.", with: "queue.group.")
+  }
+
+  private func assertTripQueue(
+    _ app: XCUIApplication, rows: [String], groups: [String], members: [[String]]
+  ) {
+    XCTAssertTrue(app.buttons["queue.add"].waitForExistence(timeout: 5))
+    XCTAssertEqual(itemRows(app).allElementsBoundByIndex.map(\.identifier), rows)
+    let headers = app.staticTexts.matching(
+      NSPredicate(format: "identifier BEGINSWITH %@", "queue.group."))
+    XCTAssertEqual(headers.allElementsBoundByIndex.map(\.identifier), groups)
+    XCTAssertEqual(groups.count, members.count)
+    for index in groups.indices {
+      let header = app.staticTexts[groups[index]]
+      for rowID in members[index] {
+        XCTAssertGreaterThan(app.buttons[rowID].frame.midY, header.frame.midY)
+        if index + 1 < groups.count {
+          XCTAssertLessThan(
+            app.buttons[rowID].frame.midY, app.staticTexts[groups[index + 1]].frame.midY)
+        }
+      }
+    }
+  }
+
+  private func backToQueue(_ app: XCUIApplication) {
+    let back = app.navigationBars.buttons["Return Queue"]
+    XCTAssertTrue(back.waitForExistence(timeout: 5))
+    back.tap()
+    XCTAssertTrue(app.buttons["queue.add"].waitForExistence(timeout: 5))
   }
 
   private func itemRows(_ app: XCUIApplication) -> XCUIElementQuery {

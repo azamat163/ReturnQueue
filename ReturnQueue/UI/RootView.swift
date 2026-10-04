@@ -1,9 +1,12 @@
 import ReturnQueueCore
 import ReturnQueuePresentation
 import SwiftUI
+import UIKit
 
 struct RootView: View {
   let session: AppSession
+  @State private var queueModel: QueueViewModel
+  @Environment(\.scenePhase) private var scenePhase
   var prepare: @Sendable () async throws -> Void = {}
   var prepareRetry: @Sendable () async throws -> Void = {}
   @State private var editor: EditorPresentation?
@@ -15,37 +18,37 @@ struct RootView: View {
   @State private var operationError: String?
   @State private var initializationFailed = false
 
+  init(
+    session: AppSession, prepare: @escaping @Sendable () async throws -> Void = {},
+    prepareRetry: @escaping @Sendable () async throws -> Void = {}
+  ) {
+    self.session = session
+    self.prepare = prepare
+    self.prepareRetry = prepareRetry
+    _queueModel = State(initialValue: QueueViewModel(session: session))
+  }
+
   var body: some View {
     NavigationStack {
       List {
         statusSection
         cleanupSection
-        if let snapshot = session.snapshot {
-          ForEach(snapshot.records) { item in
-            NavigationLink(value: item.id) {
-              VStack(alignment: .leading, spacing: 4) {
-                Text(item.title).font(.headline).foregroundStyle(DesignTokens.ink)
-                Text(item.merchant).font(.subheadline).foregroundStyle(DesignTokens.secondary)
-                Text(DetailFormatting.state(item.state)).font(.footnote)
-                  .foregroundStyle(DesignTokens.accent)
-              }
-              .padding(.vertical, 4)
-            }
-            .listRowBackground(DesignTokens.surface)
-            .accessibilityIdentifier("queue.item.\(item.id.uuidString)")
-          }
-        }
+        QueueView(model: queueModel)
       }
+      .accessibilityIdentifier("queue.list")
       .scrollContentBackground(.hidden)
       .background(DesignTokens.background)
       .overlay {
-        if case .ready(let snapshot) = session.phase, snapshot.records.isEmpty, cleanupURL == nil {
+        if case .ready(let snapshot) = session.phase, queueModel.groups.isEmpty, cleanupURL == nil {
           ContentUnavailableView(
-            "No returns yet", systemImage: "shippingbox",
-            description: Text("Add an item and where you bought it to start your queue."))
+            snapshot.records.isEmpty ? "No returns yet" : "No items to return",
+            systemImage: "shippingbox",
+            description: Text("Add an item and where you bought it to start your queue.")
+          )
+          .accessibilityIdentifier("queue.empty")
         }
       }
-      .navigationTitle("Queue")
+      .navigationTitle("Return Queue")
       .navigationDestination(for: UUID.self) { itemID in
         ReturnDetailView(session: session, itemID: itemID)
       }
@@ -90,6 +93,21 @@ struct RootView: View {
         Button("OK", role: .cancel) { operationError = nil }
       } message: {
         Text(operationError ?? "")
+      }
+      .onAppear { queueModel.refreshToday() }
+      .onChange(of: scenePhase) { _, phase in
+        if phase == .active { queueModel.refreshToday() }
+      }
+      .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+        queueModel.refreshToday()
+      }
+      .onReceive(NotificationCenter.default.publisher(for: .NSSystemTimeZoneDidChange)) { _ in
+        queueModel.refreshToday()
+      }
+      .onReceive(
+        NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)
+      ) { _ in
+        queueModel.refreshToday()
       }
       .task {
         guard case .notLoaded = session.phase else { return }

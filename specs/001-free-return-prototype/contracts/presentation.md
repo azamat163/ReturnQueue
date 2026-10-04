@@ -126,8 +126,9 @@ Type replace device/navigation chrome. Custom named asset tokens retain accent
 SVGs: Add hero package 28pt; Detail location pin 24pt. No substitute/redrawn assets.
 Optional details are expandable. Details derive the current item by ID, display all
 editor fields and state truthfully, mark unknown values Not set and dates manual.
-No dead progression/reminder/P2 tabs. Minimal Queue list provides Add/detail;
-grouping/sorting acceptance remains T008.
+No dead progression/reminder/P2 tabs. T006 introduced minimal Queue Add/detail
+navigation; later T007/T008 grouping/sorting acceptance is fixed separately in
+[queue.md](queue.md), without changing this session/editor contract.
 
 Accessibility IDs: `queue.add`, `queue.item.<UUID>`, `detail.edit`,
 `editor.<field rawValue>`, `editor.optional`, `editor.save`, `editor.cancel`,

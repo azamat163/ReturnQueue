@@ -17,6 +17,7 @@
 		100000000000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000014 /* Assets.xcassets */; };
 		100000000000000000000015 /* ReturnQueuePresentation in Frameworks */ = {isa = PBXBuildFile; productRef = 900000000000000000000004 /* ReturnQueuePresentation */; };
 		100000000000000000000016 /* ReturnQueueUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000016 /* ReturnQueueUITests.swift */; };
+		100000000000000000000017 /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000017 /* QueueView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		200000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 		200000000000000000000015 /* ReturnQueueUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReturnQueueUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		200000000000000000000016 /* ReturnQueueUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnQueueUITests.swift; sourceTree = "<group>"; };
+		200000000000000000000017 /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +58,7 @@
 		};
 		400000000000000000000003 /* UI */ = {
 			isa = PBXGroup;
-			children = (200000000000000000000002 /* RootView.swift */, 200000000000000000000010 /* ReturnEditorView.swift */, 200000000000000000000011 /* ReturnDetailView.swift */, 200000000000000000000012 /* RecoveryShareView.swift */, 200000000000000000000013 /* DesignTokens.swift */,);
+			children = (200000000000000000000002 /* RootView.swift */, 200000000000000000000017 /* QueueView.swift */, 200000000000000000000010 /* ReturnEditorView.swift */, 200000000000000000000011 /* ReturnDetailView.swift */, 200000000000000000000012 /* RecoveryShareView.swift */, 200000000000000000000013 /* DesignTokens.swift */,);
 			path = UI;
 			sourceTree = "<group>";
 		};
@@ -138,7 +140,7 @@
 		300000000000000000000002 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
-			files = (100000000000000000000001 /* ReturnQueueApp.swift in Sources */, 100000000000000000000002 /* RootView.swift in Sources */, 100000000000000000000010 /* ReturnEditorView.swift in Sources */, 100000000000000000000011 /* ReturnDetailView.swift in Sources */, 100000000000000000000012 /* RecoveryShareView.swift in Sources */, 100000000000000000000013 /* DesignTokens.swift in Sources */,);
+			files = (100000000000000000000001 /* ReturnQueueApp.swift in Sources */, 100000000000000000000002 /* RootView.swift in Sources */, 100000000000000000000017 /* QueueView.swift in Sources */, 100000000000000000000010 /* ReturnEditorView.swift in Sources */, 100000000000000000000011 /* ReturnDetailView.swift in Sources */, 100000000000000000000012 /* RecoveryShareView.swift in Sources */, 100000000000000000000013 /* DesignTokens.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		300000000000000000000004 /* UITest Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (100000000000000000000016,); runOnlyForDeploymentPostprocessing = 0; };

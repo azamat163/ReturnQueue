@@ -22,8 +22,9 @@ actual chrome. Native Form/toolbar metrics adapt to device size and text scale.
 Figma example purchase values never become default or seeded app data. Detail's
 Mark as dropped off, Keep item and Reminder actions await T010/T011/P2; repeated
 four-tab bar awaits later navigation scope. They are omitted from this slice so
-the visible controls actually work. T008 grouped/sorted queue remains open; T006
-uses a simple list only to reach Add and details.
+the visible controls actually work. At the T006 handoff, T008 grouped/sorted Queue
+was open; its later acceptance is recorded in [the Queue mapping](t008-native-mapping.md).
+T006 used a simple list only to reach Add and details.
 
 The provided design is light; this slice uses that appearance explicitly. Dark
 appearance and the broader accessibility acceptance remain part of T015. System

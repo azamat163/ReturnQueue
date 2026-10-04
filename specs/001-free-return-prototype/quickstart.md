@@ -1,7 +1,8 @@
 # Проверка первого бесплатного прототипа
 
-Статус: T001–T006 приняты. Рабочие Add/edit/details и recovery share прошли
-независимые review, 93 native tests и четыре сценария на чистом iPhone-симуляторе.
+Статус: T001–T008 приняты (8 задач, 20 открыты). Add/edit/details, recovery share
+и очередь по месту сдачи прошли независимые review, 106 native tests и пять
+сценариев на чистом iPhone-симуляторе.
 Полные P1/P2 workflows и релиз ещё не готовы.
 
 ## Что понадобится
@@ -9,7 +10,7 @@
 Для package tests — Swift 6+ и macOS 14+ (Observation Presentation). Для iPhone-сборки и сценариев интерфейса — полный Xcode
 с iOS 17+ SDK и симулятором или тестовым iPhone. Xcode 26.3 установлен; iOS SDK 26.2
 и симуляторы доступны. App target/shared scheme подключает Core/Storage/Presentation;
-unsigned builds и UI XCTest прошли независимо (T006 принят 2026-10-04).
+unsigned builds и UI XCTest прошли независимо (T007/T008 приняты 2026-10-04).
 
 Из корня выбранного рабочего checkout:
 
@@ -23,6 +24,9 @@ T005 отдельно проверяет ReturnQueueStorage/ReturnStore: bounded
 corrupt-save blocking, stale edits и raw recovery copy. Независимые native 77/77 tests
 и обе unsigned iOS builds прошли; T005 принят 2026-10-04. T006 добавляет 16 session/editor
 tests (общий набор 93) и четыре actual UI cases с перезапуском/отменой/ошибками.
+T007/T008 добавляют семь Queue и шесть clock/projection tests (всего 106) и пятый
+UI scenario: три вещи для двух мест, сортировка known/unknown, отмена и сохранённая
+перегруппировка после edit/relaunch. Точный API — [queue.md](contracts/queue.md).
 Полный backup/restore T012/T013 остаётся открытым.
 Реальные результаты и ограничения сохраняются в [verification.md](verification.md).
 Принятый pure package gate — native XCTest с Apple Swift 6.2.4 в полном Xcode.

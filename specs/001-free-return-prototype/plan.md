@@ -2,7 +2,7 @@
 
 **Branch**: none | **Date**: 2026-10-03 | **Spec**: [spec.md](spec.md)
 
-**Input**: Бесплатный прототип P1; фото, Summary и Settings/напоминания P2. T001–T006 приняты; Add/edit/details и recovery share проверены, остальные P1/P2 workflows впереди.
+**Input**: Бесплатный прототип P1; фото, Summary и Settings/напоминания P2. T001–T008 приняты; Add/edit/details, recovery share и очередь по месту сдачи проверены, остальные P1/P2 workflows впереди.
 
 ## Summary
 
@@ -103,7 +103,11 @@ T002–T004 не зависят от iOS SDK. Полные P1/P2 workflows ос�
 непроверенными до соответствующих задач и device acceptance.
 T006 [presentation contract](contracts/presentation.md) принят после независимого
 review, 93 native tests, unsigned builds и четырёх simulator UI сценариев.
-Это Add/edit/details и recovery share; grouping, progression и P2 ещё не приняты.
+Это Add/edit/details и recovery share. T007/T008 [queue contract](contracts/queue.md)
+принят после отдельных review, native 106 tests, обеих unsigned builds и пяти
+fresh-simulator UI сценариев. Pure selector и тонкий MainActor bridge используют
+текущий committed snapshot; модель/JSON/Storage/AppSession не меняются.
+Progression, полный restore и P2 ещё не приняты.
 
 **Structure Decision**: Core не зависит от UI и iOS-фреймворков; устройство и разрешения
 обрабатывает Services, действия пользователя — UI. Не создавать API/backend.

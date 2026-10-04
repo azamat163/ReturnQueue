@@ -2,8 +2,8 @@
 
 The repository now has a [pipeline](../.gitlab-ci.yml) and executable release scripts.
 It has not been connected to a GitLab project or runner, and no Apple credentials
-have been configured for this project. T001–T006 passed scoped independent checks:
-current native package suite 93 tests, unsigned Debug/Release builds and four real
+have been configured for this project. T001–T008 passed scoped independent checks:
+current native package suite 106 tests, unsigned Debug/Release builds and five real
 UI tests on a fresh simulator (2026-10-04). Production release prerequisites remain
 unmet; no remote GitLab job is claimed. See [actual evidence](../specs/001-free-return-prototype/verification.md).
 
@@ -117,8 +117,9 @@ Any future `IOS_BUNDLE_ID`, App Store record and provisioning profile must agree
 before signing. No team or credentials are stored in the project.
 
 At the T001 bootstrap handoff, the scheme had Release Archive configuration and
-no app test target. T006 now adds ReturnQueueUITests with four actual UI scenarios
-to that shared scheme. `archive-ios.sh` requires tests/a test plan before signing;
+no app test target. T006 added ReturnQueueUITests with four actual UI scenarios;
+T008 adds the fifth, checking grouped Queue and durable regrouping, to that shared
+scheme. `archive-ios.sh` requires tests/a test plan before signing;
 their existence alone does not configure credentials or enable release jobs.
 The Linux Core image remains 6.2.1 and has
 not been remotely validated; the native author's Xcode toolchain is a separate check.
