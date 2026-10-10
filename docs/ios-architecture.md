@@ -8,8 +8,10 @@ unsigned iOS builds on 2026-10-04. T006 Add/edit/details and recovery share pass
 distinct review, independent native 93 tests, both builds and four fresh-simulator
 UI scenarios on that date. T007/T008 subsequently passed distinct review, native
 106 tests, both unsigned builds and five fresh-simulator UI scenarios, adding the
-planned-only grouped Queue. T001–T008 are accepted; 20 tasks remain open. Complete
-workflows/restore remain pending; see
+planned-only grouped Queue. US3 adds explicit manual refunds, state changes and
+Waiting/History, independently reviewed and verified with 143 native tests, both
+unsigned builds and eight UI scenarios on 2026-10-10. T001–T011 are accepted;
+17 tasks remain open. Full restore/accessibility/P2 remain pending; see
 [slice evidence](../specs/001-free-return-prototype/verification.md).
 T001 now has a minimal SwiftUI entry/empty Queue linking the local Core package.
 Independent review, unsigned Simulator/Release builds and actual simulator
@@ -216,5 +218,41 @@ and reimbursement workflows remain separate tasks.
 planned-only selector, location identity and deterministic group/item ordering.
 QueueViewModel projects the latest committed AppSession snapshot and refreshes the
 local Gregorian day without archive writes. Accepted storage, AppSession and
-editor contracts are unchanged. The current suite has 56 Core, 28 Storage and 22
-Presentation cases (106 total), plus five real UI scenarios in the shared scheme.
+editor contracts were unchanged in that slice. Its accepted suite had 56 Core,
+28 Storage and 22 Presentation cases (106 total), plus five UI scenarios. The
+current US3 suite has 70 Core, 34 Storage and 39 Presentation cases (143 total)
+and eight UI scenarios in the shared scheme.
+
+## US3 refund and mutation API
+
+The [refund contract](../specs/001-free-return-prototype/contracts/refunds.md) defines
+checked integer-cent totals and explicit, confirmed state changes. `RefundSummary`
+keeps money and store credit separate; an unknown expectation has no inferred
+zero or automatic closure. Pure `ReturnTransitions` validates an immutable candidate,
+including the whole record and retained history, before the serialized store
+performs the revision-checked atomic write. AppSession publishes only the durable
+snapshot. Draft fields and frozen pending confirmations belong to the MainActor
+form/action models; cancellation and a failed write retain the previous saved data.
+
+RefundsViewModel projects Waiting and History from that shared committed snapshot.
+Native state/closure sheets notify their detail view only on a successful save;
+the detail routes the current item after the sheet's dismissal. Root owns the
+three tab paths. A committed route drives the selected stack's binding until that
+same destination appears, protecting against an inactive stack's initial reset.
+An already visible same-tab detail needs no new pending route. Arrival restores
+normal Back behavior; changed user selection or an invalidated record cancels
+pending navigation. These are presentation rules, not stored archive fields.
+
+Recovery sharing retains the identified request and owned temporary copy through
+the native activity's actual dismissal. Completion/cancellation and interactive
+dismissal converge on an idempotent MainActor callback, scoped to Root's matching
+share ID. Only after dismissal may Root clear that request and clean the copy;
+ownership remains until removal succeeds. An interrupted dismissal must not release
+ownership. The original archive is never replaced by sharing. A persistent
+background representable presents from its attached Root parent, keeping the
+platform's phone presentation and anchoring the iPad popover. Cleanup and its
+Retry controls are guarded while a share owns the URL. Final independent recovery
+cancellation and all eight UI scenarios passed with current disk proof; the native
+test checks disappearance of both the actual activity and original-file caption.
+Current acceptance and historical failed attempts are recorded in the feature
+verification.

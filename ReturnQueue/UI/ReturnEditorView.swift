@@ -105,10 +105,13 @@ struct ReturnEditorView: View {
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .cancellationAction) {
-          Button("Cancel", systemImage: "xmark") { dismiss() }
-            .labelStyle(.iconOnly)
-            .disabled(isSaving)
-            .accessibilityIdentifier("editor.cancel")
+          Button("Cancel", systemImage: "xmark") {
+            model.cancelPendingSave()
+            dismiss()
+          }
+          .labelStyle(.iconOnly)
+          .disabled(isSaving)
+          .accessibilityIdentifier("editor.cancel")
         }
         ToolbarItem(placement: .confirmationAction) {
           Button("Save", systemImage: "checkmark") {
@@ -128,6 +131,23 @@ struct ReturnEditorView: View {
         }
       }
       .interactiveDismissDisabled(isSaving)
+      .alert(
+        "Recorded amounts exceed expectation",
+        isPresented: Binding(
+          get: { model.saveState == .awaitingConfirmation }, set: { _ in }
+        )
+      ) {
+        Button("Cancel", role: .cancel) { model.cancelPendingSave() }
+          .accessibilityIdentifier("editor.cancelExcess")
+        Button("Save as entered") {
+          Task { if await model.confirmPendingSave() { dismiss() } }
+        }
+        .accessibilityIdentifier("editor.confirmExcess")
+      } message: {
+        if let summary = model.pendingSummary {
+          Text(DetailFormatting.summary(summary) + "\n\nSave this expected refund as entered?")
+        }
+      }
       .alert(
         "Reload failed",
         isPresented: Binding(

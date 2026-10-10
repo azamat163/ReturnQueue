@@ -511,3 +511,279 @@ Both are in the task visualization directory; provenance is in
 Full P1/P2, T015/T016, physical-device protection, full backup/restore, remote GitLab,
 Apple signing, TestFlight and release acceptance remain open. These results accept
 only this Queue slice and the regression checks above.
+
+
+## US3 T009/T010/T011: tests-first preparation (2026-10-04)
+
+Base: `00ebe88a436cdc5f9570a37b38ff58d5061524b3`. Root approved the exact
+[refund contract](contracts/refunds.md) and an independent early contract audit
+found no blockers; that audit does not substitute for final source review.
+The independent test author materialized 37 new native tests (14 Core, six Storage,
+17 Presentation) before production symbols existed. Fresh native SwiftPM returned
+expected **RED**, exit 1, elapsed 12.182 seconds, for missing RefundSummary,
+ReturnMutation/new form/action APIs and Store mutation/confirmation entry points.
+Evidence: `/private/tmp/rq-t009-tests-first-red-3bnic5w5/` (`command.json`,
+`result.json`, `swift-test.log`). This is intentional tests-first evidence, not an
+implementation PASS. The command used isolated scratch/cache/config/security,
+full Xcode 26.3, UID 501 and explicit local `--disable-sandbox`.
+
+`test-materialization.json` records the four new native-test files plus the three
+appended UI journeys, formatter/parse/diff checks and byte invariance of the
+accepted 106 native cases/five UI cases and their existing helpers. The resulting
+required suite is 143 native tests/eight UI cases. A new Storage assertion targets
+retention of saved createdAt before validating a caller's nonfinite createdAt,
+preserving the accepted update contract; it passed in the initial native author run below.
+
+Source implementation is authorized after that RED; author runtime, final distinct
+source review, fresh independent QA and rendered US3 checks are pending. T009–T011
+remain unchecked; no new implementation, complete P1/P2 or release acceptance is
+claimed here.
+
+
+### Initial integrated native author check
+
+Author native XCTest **143/143 PASS**, zero failures, suite 5.798 seconds, elapsed
+21.840 seconds, exit 0. Evidence root: `/private/tmp/rq-us3-author-qvlurq6m/`;
+`native-command.json`, `native-result.json` and `native.log` retain the invocation
+and outcome. Full Xcode 26.3 / Apple Swift 6.2.4 ran `swift test --disable-sandbox`
+with isolated scratch/cache/config/security below that root. The 40 package/source
+and test file hashes were captured after that run in `native-source-sha256.json`.
+Core/Presentation and the lead-owned durable/session/editor extensions are frozen
+for review or runtime feedback; parallel UI work does not establish iOS acceptance.
+
+The root-created isolated author iPhone 17 device
+`447AABA8-77C6-4E8B-B74D-58B326948828` booted successfully (bootstatus 25.395 seconds),
+actual runtime iOS 26.3.1 build 23D8133. `boot.log` / `boot-result.json` retain the
+preparation. No app/UI result is inferred from booting. Root owns its later cleanup
+and records device provenance in `/private/tmp/returnqueue-us3-author-device.json`.
+
+The [US3 native mapping](../../docs/design/us3-native-mapping.md) records five design
+references, exact six SVG assets and platform adaptations; visual acceptance is
+still pending. T009–T011 remain unchecked until final source review, independent
+runtime and root acceptance.
+
+
+### Initial iOS author run: acceptance blocked
+
+Initial unsigned generic Simulator Debug and generic iOS Release builds passed
+(exit 0; elapsed 15.461 and 18.790 seconds). The first complete author UI run
+returned **FAIL**, exit 65: eight tests, four failures, suite 444.715 seconds,
+elapsed 475.557 seconds. The existing recovery test could not observe native share
+dismissal after tapping Close. All three new US3 journeys encountered a nested
+accessibility alias when globally locating `refund.confirm`; actual hierarchy shows
+one alert and two same-frame, same-label button representations. The four other
+accepted UI scenarios passed. Evidence remains in `ui.log`, `ui-result.json`,
+`UIResults.xcresult` and exported `attachments/manifest.json` below the author root.
+
+`failed-ui-disk-proof.json` preserves eight isolated UUID roots. Recovery's original
+36-byte corrupt file remained unchanged; its valid backup remained available, and
+the still-owned temporary raw copy was byte-equal to that original. Cleanup had not
+been reached. This failed run does not establish clean recovery completion.
+
+The test owner narrowed only the new US3 confirmation helper to one active alert,
+checking labels and identical nonzero frames before selecting the alias. Accepted
+five tests and helpers, including the recovery dismissal assertion, remain unchanged.
+Root authorized a separate native-share lifecycle experiment: native activity
+completion/cancellation explicitly clears only its matching SwiftUI presentation;
+existing cleanup still runs exclusively from sheet dismissal and retains ownership
+until removal succeeds. Targeted recovery, final full eight tests and independent
+acceptance remain pending; T009–T011 are still unchecked.
+
+
+The approved lifecycle correction compiled in both unsigned configurations (Debug
+10.219 seconds, Release 11.869 seconds, exit 0). The **unchanged** existing recovery
+scenario then passed 1/1 with zero failures: suite 34.464 seconds, elapsed 44.037
+seconds, exit 0. Actual native Close now led to owned-copy cleanup, explicit Retry
+and the same restored saved item. Evidence: `lifecycle-{debug,release,recovery}`
+command/result JSONs and logs, `LifecycleRecovery.xcresult`, and before/after source
+manifests in the author evidence root. The complete final eight-case run is still
+pending; this focused pass does not replace it or independent acceptance.
+
+
+The subsequent complete UI attempt was stopped by root after identifying an explicit
+deletion-confirmation context mismatch in the new test helper. It returned exit 73,
+`TEST INTERRUPTED`, elapsed 120.653 seconds; `final-ui-abort.json` records the owned
+process and reason. It is **not** a full-suite PASS. Product/source ownership is
+frozen while the independent test author fixes that context.
+
+Explicit local `tooling/harness.py verify` passed eight offline checks plus all
+143 native tests, zero failures, native suite 5.875 seconds, elapsed 24.772 seconds,
+exit 0. `harness-command.json`, `harness-result.json` and `harness.log` preserve
+Swift 6.2.4, full Xcode, `CI` unset and explicit local sandbox opt-in. The partial
+handoff has 85 frozen source fingerprints with zero mismatches; complete final UI8,
+final distinct review, fresh independent QA and root acceptance are still required.
+
+### US3 resumed independent checks — 2026-10-10, acceptance still blocked
+
+After resuming, checks were repeated with durable evidence outside the worktree:
+`../evidence/us3-2026-10-10/` relative to this checkout. Older temporary evidence
+paths above are historical provenance; some plain logs/manifests under `/private/tmp`
+were no longer present after the pause. They are not used as fresh acceptance proof.
+The resumed source review recorded 85 fingerprints, including the app, package,
+assets and tests; before/after hashes matched throughout each check below.
+
+Independent native XCTest passed **143/143** (70 Core, 34 Storage, 39 Presentation),
+zero failures/skips, suite 5.608 seconds. The required local harness passed eight
+offline checks plus 143 native tests, exit 0, elapsed 15.55 seconds. Unsigned generic
+Simulator Debug and iOS Release builds passed, elapsed 17.11 and 20.59 seconds.
+Spec Kit integration, foundation checks, recursive strict formatter, project plist,
+shared scheme XML and diff checks passed. These results use Xcode 26.3 (17C529),
+Apple Swift 6.2.4 and iOS SDK 26.2; they do not establish signed distribution.
+
+The fresh independent complete UI run on a separate iPhone 17 simulator
+`4805E7D5-369F-4E57-A182-4BC15A885688`, actual iOS **26.3.1** (23D8133), returned
+**FAIL**, exit 65: six passed, two failed, zero skipped; XCTest suite 740.500 seconds,
+command elapsed 776.45 seconds. All 85 source fingerprints still matched the
+reviewed snapshot. Original five UI cases and their helpers remained byte-identical
+to the previously accepted baseline. The failures are product lifecycle defects:
+
+- The existing corrupt-load recovery case tapped native Close, but the activity
+  sheet remained visible. The actual screenshot and accessibility hierarchy confirm
+  the open sheet. Original corrupt data and its backup remained intact; the owned
+  36-byte temporary copy was byte-equal to the original, but dismissal/cleanup and
+  explicit Retry were not reached. This is not completed recovery acceptance.
+- The correction journey successfully reopened to the Queue detail, then committed
+  Keep with the $20.25 store-credit entry preserved. Its second activation of History
+  displayed the root list instead of the same record's detail. The recording's last
+  frame and logs confirm the missing detail. Deletion and final relaunch assertions
+  were not reached in this failed run.
+
+`verifier/verification-report.json`, `verification-report.md`, `ui-summary.json`,
+`ui-tests.json`, `source-tested-final.json`, `native40-proof.json`, disk proof,
+`FullUIResults.xcresult`, exported attachments and the correction recording frame
+retain the complete independent evidence. A focused author correction/excess run
+had passed 2/2 earlier that day; that narrower author result did not replace this
+independent complete run. Bounded recovery-presentation and tab-navigation fixes
+return through affected source review and fresh independent runtime checks.
+
+Root additionally ran the existing manual partial-refund journey at the largest
+standard text size (`extra-extra-extra-large`): **1/1 PASS**, zero failures, suite
+160.572 seconds. All 85 source hashes matched; original `large` size was restored.
+The proof wrapper failed after the successful test because app reinstallation changed
+its data-container path. Root resolved the current container and reconstructed the
+proof from the completed xcresult, immutable command/source manifest and actual disk;
+the test was not repeated or counted as failed. `visual/result.json` records this
+limitation. The resulting archive contains separate $50 money/$30 credit, expected
+$100 and manual partial closure with the $20 explanation. Root inspected seven
+actual form/list/detail screenshots with no layout findings; fresh Figma screenshots
+and six asset hashes are recorded under `design/`. This focused visual check does
+not complete T015 VoiceOver/full accessibility or physical-device verification.
+
+T009–T011 remain unchecked until both defects are resolved and all affected gates
+pass. No commit/push, full restore, P2 or release acceptance is claimed here.
+
+The subsequent independent two-case check (`verifier-final/`) proved the corrected
+navigation journey end to end: **1/1 PASS**, 174.638 seconds, including correction,
+Keep, reimbursement deletion and relaunch. The recovery case still failed at the
+native Close lookup (30.298 seconds). Its actual screenshot shows a compact native
+popover inside a mostly blank outer SwiftUI sheet. The overall two-case result was
+one pass and one failure; it does not establish complete UI acceptance. Original
+corrupt bytes, the recovery copy and the valid backup remained intact.
+
+A bounded presentation-style change passed source review and unsigned builds, but
+the next independent recovery check (`verifier-acceptance/`) again failed at Close,
+31.628 seconds. A temporary, content-free UIKit lifecycle trace then established
+that the activity controller retained its custom popover presentation despite the
+ordinary style setter; its presenter was nested inside a SwiftUI form-sheet host.
+The trace is retained under `recovery-lifecycle-diagnosis/`; diagnostic logging was
+removed from shipping source. A supported adaptive-presentation delegate also
+passed source review/builds but failed the unchanged author recovery case, 31.590
+seconds (`recovery-adaptation-fix/`). No failed result is counted as acceptance.
+Root authorized a narrowly scoped presentation-owner correction: show the native
+activity from the attached Root hierarchy, retaining identity and temporary-copy
+ownership through actual native dismissal. Its review and runtime gates are pending.
+
+The first direct-Root author check failed only the native Close lookup, 91.311
+seconds (`recovery-root-owner-fix/`). Its screenshot shows the real native activity
+popover over Root, with the unwanted blank outer sheet removed. A separate synthetic
+app then compared plain UIKit activity presentation and baseline SwiftUI embedding
+on the same owned simulator (`native-activity-probe/`). Plain UIKit had a unique
+native `PopoverDismissRegion`, no `header.closeButton`; SwiftUI embedding had the
+native Close button. In both probes a single native cancellation action removed the
+actual shared-file caption. The two diagnostic probes completed in 18.182 seconds;
+these observations are not product acceptance or additional product test counts.
+
+Based on that actual system behavior, root narrowed its earlier byte-preservation
+policy: the recovery test may adapt only its native cancellation selector to both
+supported presentations. The other four baseline cases/helpers remain unchanged.
+The warning, actual original-file receipt, actual activity disappearance, actionable
+Retry, cleanup, original data and repaired-record checks must remain intact. A
+reviewer also requires that an interrupted dismissal retain the owned copy. The
+final product source/test review and complete independent eight-case run remain
+pending; T009–T011 are still unchecked.
+
+## US3 final acceptance — 2026-10-10
+
+The final separate source/test review passed with no open findings. The native
+activity is presented by the attached Root owner; matching actual dismissal clears
+its identified intent before cleanup. A cancelled transition or visible/pending
+share cannot release its copy. The recovery test uses the real native Close button
+or the verified native popover dismissal region, then requires disappearance of
+both the actual activity and original-file caption. Its warning, explicit Retry
+and repaired-record assertions remain unchanged, as do all other seven methods
+and existing helpers. Root's narrow test-selector decision and actual system probe
+are preserved under `native-activity-probe/`; the probe is diagnostic only.
+
+Final independent evidence is in
+`../evidence/us3-2026-10-10/verifier-release-candidate/`. Its
+`verification-report.json`, exact `source-tested-final.json` (85 files), commands,
+logs, `FullUIResults.xcresult`, method results and disk/screenshot manifests are
+retained. The report binds this final source to the separate review:
+
+| Final path | SHA-256 |
+| --- | --- |
+| RootView.swift | `566b48c87e85ae7a62313b51f0bb5ce473113291bceefa2e4f2d22fbb3900abc` |
+| RecoveryShareView.swift | `e846647837c85dfb059496151fd61112669bd0d392c8db0b7e27a85c18976fea` |
+| ReturnDetailView.swift | `34f1313d40f835ae83a95eed1aa933aeb33f247c080eb28a202d14ddacd8748e` |
+| ReturnQueueUITests.swift | `dcf367f60ec2d634b590fc7358a0b53d70f0b6a33ae9c7336889e0aafbea3471` |
+
+Independent unsigned Debug and Release builds passed, 44.249 and 37.463 seconds
+respectively. Spec Kit integration, foundation, strict recursive formatter, project
+syntax, shared scheme and diff checks passed. Xcode 26.3 build 17C529, Swift 6.2.4
+and iOS SDK 26.2 were selected per command. The fresh verifier-owned iPhone 17
+simulator `585F71E7-CDC5-400A-976E-2A6CEEFCE58A` ran actual iOS 26.3.1/23D8133.
+
+All **8/8 UI scenarios passed**, zero failures or skips, in a single complete run
+without filtering, retries or parallel testing: suite 889.784 seconds, command
+922.299 seconds, exit 0. Recovery passed in 44.327 seconds; the final correction,
+Keep, deletion and relaunch journey passed in 193.961 seconds. This final run
+supersedes the earlier failed runtime gates; those failures remain recorded above.
+
+The independent **143/143 native tests** (70 Core, 34 Storage, 39 Presentation)
+and **eight offline harness checks plus 143 native tests** are reused from
+`verifier/` and `verifier-final/`. All 40 native source/test paths match exactly;
+`native40-proof.json` and `prior-gates-reuse.json` record this provenance. These
+are prior actual passing runs on unchanged code, not newly executed tests in the
+release-candidate run.
+
+The current app container was resolved after installation. Actual disk inspection
+found eight isolated test roots and ten records, no production-default archive,
+and zero remaining recovery-copy files. The repaired archive exactly equals the
+test's valid original backup. Manual partial closure retains expected $100,
+$50 money, $30 store credit, difference $20 and its explicit explanation. The
+corrected item is kept with an empty ledger and retained closure history; the
+excess case retains $40 credit after the failed $50 write. Original corrupt
+fixture bytes remain preserved in the captured evidence.
+
+The current live raw-copy observer timed out during its initial bounded container
+lookup, before export. No test was repeated to obtain another observation. Current
+live copy byte equality is therefore unavailable; prior actual raw-copy equality
+is reused only with unchanged raw-export code and byte-identical Root.export()
+provenance in `raw-copy-reuse-provenance.json`. The current native caption shows
+the actual 36-byte original file, and the current final disk proves dismissal
+cleanup and successful repair. These evidence limits remain explicit.
+
+Root viewed fresh native recovery, separate totals, partial-closure detail and
+History list images. Seven earlier extra-extra-extra-large form/list/detail
+screenshots remain representative: 81 of 85 paths are unchanged, while the four
+changes concern lifecycle/navigation and the native cancellation test selector.
+`visual/final-layout-reuse-proof.json` and `visual/final-root-visual-review.json`
+record the comparison. A minor count pluralization follow-up belongs to P1 polish;
+there are no blocking layout findings. This is not maximum accessibility text size,
+VoiceOver, physical-device protection, remote GitLab, signing or release proof.
+
+T009–T011 are accepted; **11 of 28 tasks accepted, 17 open**. Full validated
+backup/restore and deletion T012–T014 are next. Complete P1 accessibility/offline
+checks, P2 and the real-user pilot remain open. Preparing their proposals outside
+Git does not accept those tasks. Commit/push follows final documentation review
+and exact staged-source checks by root.

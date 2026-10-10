@@ -37,7 +37,9 @@ scenarios passed on 2026-10-04. T007/T008 now add planned-only location grouping
 deterministic day/creation/UUID ordering and a local-day past badge; contract:
 specs/001-free-return-prototype/contracts/queue.md. Independent review, native
 106/106 tests, both unsigned builds and five fresh-simulator UI scenarios passed.
-T001–T008 are accepted; 20 tasks remain open.
+T009–T011 add manual reimbursements, explicit closure/correction and Waiting/History.
+Independent review, 143 native tests, both unsigned builds and all eight fresh-simulator
+UI scenarios passed on 2026-10-10. T001–T011 are accepted; 17 tasks remain open.
 The complete P1 workflow, full restore and P2 are pending. Full Xcode 26.3, iOS SDK
 and simulators are available. Do not mark tasks complete merely because files exist.
 Verify the iOS app on a real SDK/device before reporting it works.

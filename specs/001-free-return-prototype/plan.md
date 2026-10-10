@@ -2,7 +2,7 @@
 
 **Branch**: none | **Date**: 2026-10-03 | **Spec**: [spec.md](spec.md)
 
-**Input**: Бесплатный прототип P1; фото, Summary и Settings/напоминания P2. T001–T008 приняты; Add/edit/details, recovery share и очередь по месту сдачи проверены, остальные P1/P2 workflows впереди.
+**Input**: Бесплатный прототип P1; фото, Summary и Settings/напоминания P2. T001–T011 приняты; Add/edit/details, recovery share, очередь по месту сдачи и ручной учёт возмещений проверены. Полный restore, полная доступность и P2 впереди.
 
 ## Summary
 
@@ -107,7 +107,11 @@ review, 93 native tests, unsigned builds и четырёх simulator UI сцен
 принят после отдельных review, native 106 tests, обеих unsigned builds и пяти
 fresh-simulator UI сценариев. Pure selector и тонкий MainActor bridge используют
 текущий committed snapshot; модель/JSON/Storage/AppSession не меняются.
-Progression, полный restore и P2 ещё не приняты.
+US3 T009–T011 следует [refund contract](contracts/refunds.md): точный API утверждён,
+37 новых native tests и три UI journeys материализованы tests-first; ожидаемый
+missing-symbol RED подтверждён до source GO. US3 принят 2026-10-10 после отдельного
+review, независимых 143 native tests, обеих unsigned builds и восьми UI сценариев.
+Полный restore, полная доступность и P2 ещё не приняты.
 
 **Structure Decision**: Core не зависит от UI и iOS-фреймворков; устройство и разрешения
 обрабатывает Services, действия пользователя — UI. Не создавать API/backend.

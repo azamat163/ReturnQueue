@@ -1,9 +1,9 @@
 # Tasks: Free Return Queue
 
 **Input**: [spec.md](spec.md), [plan.md](plan.md), [data-model.md](data-model.md), contracts/.
-**Status**: T001–T008 приняты. Последний T007/T008 gate: независимые review,
-106/106 native tests, unsigned Debug/Release builds и 5/5 fresh-simulator UI tests
-PASS, включая actual disk inspection. Приняты 8 задач, остальные 20 открыты;
+**Status**: T001–T011 приняты. Последний US3 gate: независимые review,
+143/143 native tests, unsigned Debug/Release builds и 8/8 fresh-simulator UI tests
+PASS, включая actual disk inspection. Приняты 11 задач, остальные 17 открыты;
 полный P1 workflow/restore/P2 acceptance не завершён.
 **Tests**: Проверки прямо требуются FR-044. Приёмка на устройстве отдельна от core tests.
 **Organization**: Сначала P1, затем по результатам теста P2. Все функции бесплатны.
@@ -36,9 +36,9 @@ Independent test: три вещи, два магазина, два места; �
 
 Independent test: $50 cash + $30 credit при ожидании $100, затем закрытие с разницей $20.
 
-- [ ] T009 [P] [US3] Проверить деньги, несколько поступлений, credit, unknown expectation, excess и correction в Tests/ReturnQueueCoreTests/RefundTests.swift.
-- [ ] T010 [US3] Реализовать расчёт и подтверждаемые переходы в ReturnQueue/Core/RefundSummary.swift и ReturnTransitions.swift без автоматического банковского подтверждения.
-- [ ] T011 [US3] Создать формы поступлений/закрытия и Waiting/History в ReturnQueue/UI/ReimbursementEditor.swift, ClosureView.swift, RefundsView.swift и HistoryView.swift.
+- [x] T009 [P] [US3] Проверить деньги, несколько поступлений, credit, unknown expectation, excess и correction в Tests/ReturnQueueCoreTests/RefundTests.swift.
+- [x] T010 [US3] Реализовать расчёт и подтверждаемые переходы в ReturnQueue/Core/RefundSummary.swift и ReturnTransitions.swift без автоматического банковского подтверждения.
+- [x] T011 [US3] Создать формы поступлений/закрытия и Waiting/History в ReturnQueue/UI/ReimbursementEditor.swift, ClosureView.swift, RefundsView.swift и HistoryView.swift.
 
 ## Phase 6: US4 — Данные и восстановление
 
@@ -81,7 +81,7 @@ Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересч
 - [ ] T028 [US6] [US7] Пройти на устройстве/симуляторе P2-сценарии Summary, Settings и item reminder: контрольные суммы/счётчики, permission/global states, календарные дни/local wall-clock travel и notification routing; записать только реальные результаты в verification.md.
 
 Номера T001–T024 сохранены. T025–T028 — новые задачи и остаются открытыми.
-Приняты T001–T008; доказательства — [verification.md](verification.md).
+Приняты T001–T011; доказательства — [verification.md](verification.md).
 
 ## Phase 11: Итоговая проверка
 
@@ -100,7 +100,7 @@ T006 Add/edit/details и безопасный recovery share принят пос
 обеих unsigned builds и четырёх UI-сценариев на отдельном чистом симуляторе.
 T007/T008 добавляют planned-only группировку и стабильный порядок по
 [queue contract](contracts/queue.md); приняты после 106 native tests и пяти UI
-сценариев с реальным edit/regroup/relaunch. Workflows T010/T011 ещё открыты.
+сценариев с реальным edit/regroup/relaunch. US3 T009–T011 приняты после tests-first, review и независимых 143 native/8 UI проверок.
 US2/US3/US4 опираются на одну модель и ReturnStore; changes в общих файлах последовательны.
 P2 начинается после P1: US5 T017–T019, US6 T020–T022 + T027,
 US7 T025/T026; T027 зависит от T017 и фиксированного Settings/reminder контракта.

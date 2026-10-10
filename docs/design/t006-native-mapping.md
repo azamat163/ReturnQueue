@@ -20,7 +20,7 @@ root compared the rendered Add and saved Detail screens with those targets on
 Figma's status/Home indicators and device bezel are template chrome; iOS draws
 actual chrome. Native Form/toolbar metrics adapt to device size and text scale.
 Figma example purchase values never become default or seeded app data. Detail's
-Mark as dropped off, Keep item and Reminder actions await T010/T011/P2; repeated
+At the T006 handoff, Mark as dropped off, Keep item and Reminder actions awaited T010/T011/P2; repeated
 four-tab bar awaits later navigation scope. They are omitted from this slice so
 the visible controls actually work. At the T006 handoff, T008 grouped/sorted Queue
 was open; its later acceptance is recorded in [the Queue mapping](t008-native-mapping.md).

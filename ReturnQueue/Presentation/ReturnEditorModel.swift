@@ -4,13 +4,19 @@ import ReturnQueueCore
 import ReturnQueueStorage
 
 public enum EditorSaveState: Equatable, Sendable {
-  case idle, saving, saved
+  case idle, awaitingConfirmation, saving, saved
   case failed(String)
 }
 
 @MainActor @Observable
 public final class ReturnEditorModel {
-  public var draft: ReturnDraft
+  public var draft: ReturnDraft {
+    didSet {
+      if draft != oldValue { cancelPendingSave() }
+    }
+  }
+  public private(set) var pendingSummary: RefundSummary?
+  private var pendingCandidate: ReturnItem?
   public private(set) var fieldErrors: [ReturnEditorField: String] = [:]
   public private(set) var saveState: EditorSaveState = .idle
   private let session: AppSession
@@ -40,7 +46,9 @@ public final class ReturnEditorModel {
   public var isEditing: Bool { originalRevision != nil }
 
   public func save() async -> Bool {
-    guard saveState != .saving, saveState != .saved else { return false }
+    guard !Task.isCancelled, saveState != .saving, saveState != .saved,
+      saveState != .awaitingConfirmation
+    else { return false }
     fieldErrors = [:]
     var item = original
     item.title = text(draft.title, field: .title, label: "item name", limit: 120, required: true)
@@ -65,15 +73,53 @@ public final class ReturnEditorModel {
     do {
       validated = try item.validated()
     } catch {
-      saveState = .failed("These changes are not valid for the saved return. Review the details.")
+      saveState = .failed(
+        error as? ReturnQueueError == .missingClosureNote
+          ? "Edit the closure explanation or reopen this return first."
+          : "These changes are not valid for the saved return. Review the details.")
       return false
     }
+    do {
+      if isEditing,
+        try ReturnTransitions.requiresExpectedRefundConfirmation(from: original, to: validated)
+      {
+        pendingSummary = try RefundSummary(item: validated)
+        pendingCandidate = validated
+        saveState = .awaitingConfirmation
+        return false
+      }
+    } catch {
+      saveState = .failed("Review the recorded amounts before saving. Your draft is kept.")
+      return false
+    }
+    return await commit(validated, confirmation: .none)
+  }
+
+  public func confirmPendingSave() async -> Bool {
+    guard !Task.isCancelled, saveState == .awaitingConfirmation,
+      let candidate = pendingCandidate
+    else { return false }
+    return await commit(candidate, confirmation: .confirmed)
+  }
+
+  public func cancelPendingSave() {
+    guard saveState != .saving else { return }
+    pendingCandidate = nil
+    pendingSummary = nil
+    if saveState == .awaitingConfirmation { saveState = .idle }
+  }
+
+  private func commit(_ candidate: ReturnItem, confirmation: ReturnConfirmation) async -> Bool {
+    guard !Task.isCancelled, saveState != .saving, saveState != .saved else { return false }
     saveState = .saving
+    pendingCandidate = nil
+    pendingSummary = nil
     do {
       if let originalRevision {
-        _ = try await session.update(validated, expectedRevision: originalRevision)
+        _ = try await session.update(
+          candidate, expectedRevision: originalRevision, confirmation: confirmation)
       } else {
-        _ = try await session.create(validated)
+        _ = try await session.create(candidate)
       }
       saveState = .saved
       return true

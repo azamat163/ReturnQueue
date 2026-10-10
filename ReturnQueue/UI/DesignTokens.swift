@@ -11,6 +11,7 @@ enum DesignTokens {
   static let accent = Color("ColorAccent")
   static let line = Color("ColorLine")
   static let warning = Color("ColorWarning")
+  static let success = Color("ColorSuccess")
 }
 
 enum DetailFormatting {
@@ -31,5 +32,32 @@ enum DetailFormatting {
     case .closed: return "Closed"
     case .kept: return "Keeping item"
     }
+  }
+
+  static func outcome(_ outcome: ClosureOutcome?) -> String {
+    guard let outcome else { return "Not set" }
+    switch outcome {
+    case .fullRefund: return "Refund received"
+    case .partialRefund: return "Partial refund"
+    case .denied: return "Denied"
+    case .cancelled: return "Cancelled"
+    }
+  }
+
+  static func kind(_ kind: ReimbursementKind) -> String {
+    kind == .money ? "Money" : "Store credit"
+  }
+
+  static func timestamp(_ date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.calendar = Calendar(identifier: .gregorian)
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = .current
+    formatter.dateFormat = "MMM d, yyyy 'at' h:mm a"
+    return formatter.string(from: date)
+  }
+
+  static func summary(_ summary: RefundSummary) -> String {
+    "Money: \(amount(summary.moneyCents))\nStore credit: \(amount(summary.storeCreditCents))\nExpected refund: \(amount(summary.expectedRefundCents))\nDifference from expected: \(amount(summary.differenceCents))"
   }
 }

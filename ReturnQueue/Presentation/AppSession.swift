@@ -18,6 +18,8 @@ public enum SessionFailure: Error, Equatable, Sendable {
   case busy, notReady
   case store(ReturnStoreFailure)
   case recovery(ReturnPersistenceFailure)
+  case validation(ReturnQueueError)
+  case transition(ReturnTransitionFailure)
 }
 
 @MainActor @Observable
@@ -73,13 +75,41 @@ public final class AppSession {
     }
   }
 
-  public func update(_ item: ReturnItem, expectedRevision: UInt64) async throws -> ReturnSnapshot {
+  public func update(
+    _ item: ReturnItem, expectedRevision: UInt64, confirmation: ReturnConfirmation = .none
+  ) async throws -> ReturnSnapshot {
     try beginMutation()
     defer { activity = .idle }
     do {
-      let committed = try await store.update(item, expectedRevision: expectedRevision)
+      let committed = try await store.update(
+        item, expectedRevision: expectedRevision, confirmation: confirmation)
       publish(committed)
       return committed
+    } catch let error as ReturnQueueError {
+      throw SessionFailure.validation(error)
+    } catch let error as ReturnTransitionFailure {
+      throw SessionFailure.transition(error)
+    } catch {
+      throw SessionFailure.store(error as? ReturnStoreFailure ?? .writeFailed)
+    }
+  }
+
+  public func mutate(
+    itemID: UUID, command: ReturnMutation, expectedRevision: UInt64, updatedAt: Date,
+    confirmation: ReturnConfirmation = .none
+  ) async throws -> ReturnSnapshot {
+    try beginMutation()
+    defer { activity = .idle }
+    do {
+      let committed = try await store.mutate(
+        itemID: itemID, command: command, expectedRevision: expectedRevision,
+        updatedAt: updatedAt, confirmation: confirmation)
+      publish(committed)
+      return committed
+    } catch let error as ReturnQueueError {
+      throw SessionFailure.validation(error)
+    } catch let error as ReturnTransitionFailure {
+      throw SessionFailure.transition(error)
     } catch {
       throw SessionFailure.store(error as? ReturnStoreFailure ?? .writeFailed)
     }

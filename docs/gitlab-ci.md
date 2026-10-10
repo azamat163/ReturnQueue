@@ -2,9 +2,9 @@
 
 The repository now has a [pipeline](../.gitlab-ci.yml) and executable release scripts.
 It has not been connected to a GitLab project or runner, and no Apple credentials
-have been configured for this project. T001–T008 passed scoped independent checks:
-current native package suite 106 tests, unsigned Debug/Release builds and five real
-UI tests on a fresh simulator (2026-10-04). Production release prerequisites remain
+have been configured for this project. T001–T011 passed scoped independent checks:
+current native package suite 143 tests, unsigned Debug/Release builds and eight real
+UI tests on a fresh simulator (2026-10-10). Production release prerequisites remain
 unmet; no remote GitLab job is claimed. See [actual evidence](../specs/001-free-return-prototype/verification.md).
 
 ## Checks available now

@@ -1,8 +1,8 @@
 # Проверка первого бесплатного прототипа
 
-Статус: T001–T008 приняты (8 задач, 20 открыты). Add/edit/details, recovery share
-и очередь по месту сдачи прошли независимые review, 106 native tests и пять
-сценариев на чистом iPhone-симуляторе.
+Статус: T001–T011 приняты (11 задач, 17 открыты). Add/edit/details, recovery share,
+очередь по месту сдачи и ручной учёт возмещений прошли независимые review,
+143 native tests и восемь сценариев на чистом iPhone-симуляторе.
 Полные P1/P2 workflows и релиз ещё не готовы.
 
 ## Что понадобится
@@ -10,7 +10,7 @@
 Для package tests — Swift 6+ и macOS 14+ (Observation Presentation). Для iPhone-сборки и сценариев интерфейса — полный Xcode
 с iOS 17+ SDK и симулятором или тестовым iPhone. Xcode 26.3 установлен; iOS SDK 26.2
 и симуляторы доступны. App target/shared scheme подключает Core/Storage/Presentation;
-unsigned builds и UI XCTest прошли независимо (T007/T008 приняты 2026-10-04).
+unsigned builds и UI XCTest прошли независимо (US3 T009–T011 приняты 2026-10-10).
 
 Из корня выбранного рабочего checkout:
 
@@ -27,6 +27,9 @@ tests (общий набор 93) и четыре actual UI cases с переза
 T007/T008 добавляют семь Queue и шесть clock/projection tests (всего 106) и пятый
 UI scenario: три вещи для двух мест, сортировка known/unknown, отмена и сохранённая
 перегруппировка после edit/relaunch. Точный API — [queue.md](contracts/queue.md).
+US3 добавляет 37 native tests (всего 143) и три UI сценария (всего восемь):
+частичный итог $50 money + $30 credit при ожидании $100; corrections/delete/relaunch;
+excess, отмена и retained draft при ошибке записи. API — [refunds.md](contracts/refunds.md).
 Полный backup/restore T012/T013 остаётся открытым.
 Реальные результаты и ограничения сохраняются в [verification.md](verification.md).
 Принятый pure package gate — native XCTest с Apple Swift 6.2.4 в полном Xcode.

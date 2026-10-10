@@ -114,8 +114,10 @@ the feature verification document.
 T007/T008 subsequently passed distinct review, independent 106 native tests, both
 unsigned builds and five UI scenarios on a fresh simulator, including actual disk
 inspection and root Queue visual comparison. The explicit local harness verify
-also passed eight offline checks and all 106 native tests. Current acceptance is
-T001–T008 (8 of 28 tasks); 20 tasks remain open. Full P1/P2 and release gates above
+also passed eight offline checks and all 106 native tests. US3 subsequently passed
+distinct review, 143 native tests, both unsigned builds, eight fresh-simulator UI
+scenarios and actual disk inspection on 2026-10-10. Current acceptance is
+T001–T011 (11 of 28 tasks); 17 tasks remain open. Full P1/P2 and release gates above
 remain open; see [evidence](../specs/001-free-return-prototype/verification.md).
 
 GitLab configuration can be reviewed locally before choosing a GitLab project.

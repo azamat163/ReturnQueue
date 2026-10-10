@@ -85,15 +85,44 @@ public actor ReturnStore {
     return try commit(snapshot.records + [item])
   }
 
-  public func update(_ item: ReturnItem, expectedRevision: UInt64) throws -> ReturnSnapshot {
+  public func update(
+    _ item: ReturnItem, expectedRevision: UInt64, confirmation: ReturnConfirmation = .none
+  ) throws -> ReturnSnapshot {
     let snapshot = try writableSnapshot()
     guard expectedRevision == snapshot.revision else { throw ReturnStoreFailure.staleRevision }
     guard let index = snapshot.records.firstIndex(where: { $0.id == item.id }) else {
       throw ReturnStoreFailure.missingRecord
     }
-    var records = snapshot.records
     var replacement = item
-    replacement.createdAt = records[index].createdAt
+    replacement.createdAt = snapshot.records[index].createdAt
+    // Validate the actual replacement, preserving the accepted creation-time ownership.
+    do {
+      _ = try replacement.validated()
+    } catch {
+      throw ReturnStoreFailure.invalidRecords
+    }
+    if try ReturnTransitions.requiresExpectedRefundConfirmation(
+      from: snapshot.records[index], to: replacement), confirmation != .confirmed
+    {
+      throw ReturnTransitionFailure.confirmationRequired(.excessReimbursement)
+    }
+    var records = snapshot.records
+    records[index] = replacement
+    return try commit(records)
+  }
+
+  public func mutate(
+    itemID: UUID, command: ReturnMutation, expectedRevision: UInt64, updatedAt: Date,
+    confirmation: ReturnConfirmation = .none
+  ) throws -> ReturnSnapshot {
+    let snapshot = try writableSnapshot()
+    guard expectedRevision == snapshot.revision else { throw ReturnStoreFailure.staleRevision }
+    guard let index = snapshot.records.firstIndex(where: { $0.id == itemID }) else {
+      throw ReturnStoreFailure.missingRecord
+    }
+    let replacement = try ReturnTransitions.applying(
+      command, to: snapshot.records[index], updatedAt: updatedAt, confirmation: confirmation)
+    var records = snapshot.records
     records[index] = replacement
     return try commit(records)
   }
