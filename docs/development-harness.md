@@ -78,8 +78,8 @@ review and native 49-test verification passed for this slice. T005 supplies
 ReturnQueueStorage and ReturnStore against the fixed
 [storage contract](../specs/001-free-return-prototype/contracts/storage.md);
 independent review, native 77/77 tests and unsigned Simulator/Release builds
-passed on 2026-10-04. Restore and product workflows
-remain later tasks. T001 adds an app target/shared scheme and
+passed on 2026-10-04. At that handoff restore and product workflows
+remained later tasks. T001 adds an app target/shared scheme and
 minimal empty Queue; independent review/build/install/launch gates passed
 on 2026-10-04.
 
@@ -107,8 +107,8 @@ unsigned builds. T006 Add/edit/details and safe recovery share now passed distin
 review, 93 native tests and four actual UI scenarios on a fresh simulator, including
 disk inspection and root Figma/native visual comparison (2026-10-04). Package
 Presentation uses Foundation/Observation and a macOS 14 host baseline; iOS remains
-17+. The shared scheme contains ReturnQueueUITests. Full P1/P2 acceptance, physical
-device protection, full restore and signed release remain open; evidence is in
+17+. The shared scheme contains ReturnQueueUITests. At that handoff full P1/P2
+acceptance, physical device protection, full restore and signed release remained open; evidence is in
 the feature verification document.
 
 T007/T008 subsequently passed distinct review, independent 106 native tests, both
@@ -116,9 +116,24 @@ unsigned builds and five UI scenarios on a fresh simulator, including actual dis
 inspection and root Queue visual comparison. The explicit local harness verify
 also passed eight offline checks and all 106 native tests. US3 subsequently passed
 distinct review, 143 native tests, both unsigned builds, eight fresh-simulator UI
-scenarios and actual disk inspection on 2026-10-10. Current acceptance is
-T001–T011 (11 of 28 tasks); 17 tasks remain open. Full P1/P2 and release gates above
-remain open; see [evidence](../specs/001-free-return-prototype/verification.md).
+scenarios and actual disk inspection on 2026-10-10; that handoff accepted 11 tasks.
+
+US4 T012–T014 subsequently passed separate source/test review and fresh independent
+verification on 2026-10-11: 181 native tests (72 Core, 58 Storage, 51 Presentation),
+eight offline harness checks, both unsigned configurations and all 12 UI scenarios
+in one unfiltered run, zero failures/skips. Actual native Save to Files, repeated
+import, current raw/validated-copy byte equality, cleanup and committed disk state
+were verified. Later affected source review was performed by root, who authored no
+production/tests, because agent capacity prevented reactivating the earlier reviewer;
+the separate verifier remained independent. Current acceptance is T001–T014
+(14 of 28 tasks); 14 remain open. Full T015/T016 accessibility/offline work, P2,
+physical-device protection and signed/remote release gates remain open; see
+[evidence](../specs/001-free-return-prototype/verification.md).
+
+Official XcodeBuildMCP 2.7.0 CLI is available and was used for the bounded US4
+ordinary/large-text visual gate. It is not connected as a chat MCP. Actual AX5
+native title truncation and native alert scrolling remain T015 follow-ups;
+this scoped visual pass does not establish VoiceOver/full accessibility.
 
 GitLab configuration can be reviewed locally before choosing a GitLab project.
 The GitHub repository remains the known remote until the user chooses migration or

@@ -1,10 +1,10 @@
 # Tasks: Free Return Queue
 
 **Input**: [spec.md](spec.md), [plan.md](plan.md), [data-model.md](data-model.md), contracts/.
-**Status**: T001–T011 приняты. Последний US3 gate: независимые review,
-143/143 native tests, unsigned Debug/Release builds и 8/8 fresh-simulator UI tests
-PASS, включая actual disk inspection. Приняты 11 задач, остальные 17 открыты;
-полный P1 workflow/restore/P2 acceptance не завершён.
+**Status**: T001–T014 приняты. Последний US4 gate: отдельные source/test review,
+181/181 native tests плюс 8 offline checks, unsigned Debug/Release builds и полный
+12/12 fresh-simulator UI run PASS, включая actual Files save/import и disk proof.
+Приняты 14 задач, остальные 14 открыты; T015/T016, P2 и release acceptance не завершены.
 **Tests**: Проверки прямо требуются FR-044. Приёмка на устройстве отдельна от core tests.
 **Organization**: Сначала P1, затем по результатам теста P2. Все функции бесплатны.
 
@@ -44,9 +44,17 @@ Independent test: $50 cash + $30 credit при ожидании $100, затем
 
 Independent test: полный P1 roundtrip, повторный restore без копий, invalid archive не меняет базу.
 
-- [ ] T012 [P] [US4] Написать проверки unsupported version/duplicate ID/invalid date/size/atomic failure в Tests/ReturnQueueCoreTests/ArchiveTests.swift и Tests/ReturnQueueStorageTests/; полный replacement/restore acceptance ещё открыт.
-- [ ] T013 [US4] Реализовать validated export/preview/atomic replacement и raw corrupt-file export в ReturnQueue/Services/ArchiveService.swift.
-- [ ] T014 [US4] Добавить экран Data & backups с import preview, backup offer, confirm restore/delete и объяснение локального хранения в ReturnQueue/UI/DataSettingsView.swift.
+API/owner/cancellation/replacement контракт утверждён в
+[archive-service.md](contracts/archive-service.md). T012 tests-first требует
+настоящего missing-symbol RED; он зафиксирован до реализации. Приёмка подтверждена
+отдельными review, 181 native/8 offline и полным независимым 12 UI run.
+Старые 143 native methods и восемь UI cases сохранены; два согласованных
+fixture-исключения и capacity regression описаны в verification.md; новые UI tests —
+отдельный класс `ReturnQueueUITests/DataBackupsTests.swift`.
+
+- [x] T012 [P] [US4] Написать проверки unsupported version/duplicate ID/invalid date/size/atomic failure в Tests/ReturnQueueCoreTests/ArchiveTests.swift и ReturnQueueStorageTests; replacement/restore acceptance подтверждён native/UI/disk gates.
+- [x] T013 [US4] Реализовать validated export/preview/atomic replacement и raw corrupt-file export в ReturnQueue/Services/ArchiveService.swift.
+- [x] T014 [US4] Добавить экран Data & backups с import preview, backup offer, confirm restore/delete и объяснение локального хранения в ReturnQueue/UI/DataSettingsView.swift.
 
 ## Phase 7: P1 Verification
 
@@ -81,7 +89,7 @@ Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересч
 - [ ] T028 [US6] [US7] Пройти на устройстве/симуляторе P2-сценарии Summary, Settings и item reminder: контрольные суммы/счётчики, permission/global states, календарные дни/local wall-clock travel и notification routing; записать только реальные результаты в verification.md.
 
 Номера T001–T024 сохранены. T025–T028 — новые задачи и остаются открытыми.
-Приняты T001–T011; доказательства — [verification.md](verification.md).
+Приняты T001–T014; доказательства — [verification.md](verification.md).
 
 ## Phase 11: Итоговая проверка
 
@@ -94,8 +102,9 @@ Oct 2026 $160 money + $80 credit / 4 returns; edits/deletes/restore пересч
 Первый независимый slice T002 -> T003 -> T004 + codec contract tests можно проверить
 без iOS SDK. T001 app bootstrap принят отдельным review/build/launch gate;
 T005 storage/actor принят после независимых review, native 77/77 tests и обеих
-unsigned iOS builds. Тесты JSON boundary и store failures покрывают часть T012;
-полный replacement/restore acceptance остаётся отдельной работой.
+unsigned iOS builds. На этом этапе JSON boundary/store failures покрывали только
+часть T012. T012–T014 теперь приняты после 181 native tests, восьми offline checks,
+обеих unsigned builds и полного независимого 12 UI run с фактическим disk proof.
 T006 Add/edit/details и безопасный recovery share принят после 93 native tests,
 обеих unsigned builds и четырёх UI-сценариев на отдельном чистом симуляторе.
 T007/T008 добавляют planned-only группировку и стабильный порядок по

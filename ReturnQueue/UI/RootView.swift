@@ -23,6 +23,8 @@ struct RootView: View {
   @State private var exportInProgress = false
   @State private var operationError: String?
   @State private var initializationFailed = false
+  @State private var dataPresented = false
+  @State private var committedDataChange: DataChange?
 
   init(
     session: AppSession, prepare: @escaping @Sendable () async throws -> Void = {},
@@ -71,6 +73,9 @@ struct RootView: View {
     .sheet(item: $editor) { presentation in
       ReturnEditorView(model: presentation.model, session: session)
     }
+    .sheet(isPresented: $dataPresented, onDismiss: dataSheetDismissed) {
+      DataSettingsView(session: session) { committedDataChange = $0 }
+    }
     .background {
       RecoveryShareView(share: share) { id in
         // UIKit has dismissed this exact activity before ownership can be released.
@@ -115,6 +120,11 @@ struct RootView: View {
     }
     .onChange(of: session.phase) { _, _ in
       if let route = pendingRoute, !isCurrent(route) { cancelPendingRoute() }
+      if case .ready = session.phase {
+        queuePath = availablePath(queuePath)
+        waitingPath = availablePath(waitingPath)
+        historyPath = availablePath(historyPath)
+      }
     }
     .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
       queueModel.refreshToday()
@@ -158,10 +168,15 @@ struct RootView: View {
       .overlay { emptyState(tab) }
       .navigationTitle(tab.title)
       .navigationDestination(for: UUID.self) { itemID in
-        ReturnDetailView(session: session, itemID: itemID) { routeCommitted(itemID) }
-          .onAppear { destinationArrived(itemID, in: tab, path: path) }
+        ReturnDetailView(
+          session: session, itemID: itemID,
+          onStateSaved: { routeCommitted(itemID) }, onDeleted: { returnDeleted(itemID) }
+        )
+        .onAppear { destinationArrived(itemID, in: tab, path: path) }
+        .toolbar { dataToolbar }
       }
       .toolbar {
+        dataToolbar
         if tab == .toReturn {
           ToolbarItem(placement: .topBarTrailing) {
             Button("Add return", systemImage: "plus") {
@@ -172,6 +187,17 @@ struct RootView: View {
           }
         }
       }
+    }
+  }
+
+  @ToolbarContentBuilder private var dataToolbar: some ToolbarContent {
+    ToolbarItem(placement: .topBarLeading) {
+      Button("Data & backups", systemImage: "gearshape") {
+        guard canOpenData else { return }
+        dataPresented = true
+      }
+      .disabled(!canOpenData)
+      .accessibilityIdentifier("data.open")
     }
   }
 
@@ -222,6 +248,36 @@ struct RootView: View {
     selectedTab = destination
   }
 
+  private var canOpenData: Bool {
+    guard session.activity == .idle, cleanupURL == nil, share == nil,
+      !exportInProgress, !cleanupInProgress, !initializationFailed
+    else { return false }
+    switch session.phase {
+    case .ready, .loadFailed: return true
+    case .notLoaded, .loading: return false
+    }
+  }
+
+  private func dataSheetDismissed() {
+    guard committedDataChange != nil else { return }
+    // A replacement can keep the same UUID while changing its meaning. Reset every cached stack.
+    committedDataChange = nil
+    pendingRoute = nil
+    queuePath = []
+    waitingPath = []
+    historyPath = []
+  }
+
+  private func returnDeleted(_ itemID: UUID) {
+    guard case .ready(let snapshot) = session.phase,
+      !snapshot.records.contains(where: { $0.id == itemID })
+    else { return }
+    if pendingRoute?.itemID == itemID { pendingRoute = nil }
+    queuePath.removeAll { $0 == itemID }
+    waitingPath.removeAll { $0 == itemID }
+    historyPath.removeAll { $0 == itemID }
+  }
+
   private func storedPath(in tab: ReturnTab) -> [UUID] {
     switch tab {
     case .toReturn: queuePath
@@ -236,7 +292,7 @@ struct RootView: View {
         if let route = pendingRoute, selectedTab == tab, route.tab == tab, isCurrent(route) {
           return [route.itemID]
         }
-        return stored.wrappedValue
+        return availablePath(stored.wrappedValue)
       },
       set: { path in
         if let route = pendingRoute, selectedTab == tab, route.tab == tab, isCurrent(route) {
@@ -244,8 +300,14 @@ struct RootView: View {
           if path.isEmpty { return }
           if path != [route.itemID] { pendingRoute = nil }
         }
-        stored.wrappedValue = path
+        stored.wrappedValue = availablePath(path)
       })
+  }
+
+  private func availablePath(_ path: [UUID]) -> [UUID] {
+    guard case .ready(let snapshot) = session.phase else { return path }
+    let committedIDs = Set(snapshot.records.map(\.id))
+    return path.filter { committedIDs.contains($0) }
   }
 
   private func destinationArrived(_ itemID: UUID, in tab: ReturnTab, path: Binding<[UUID]>) {

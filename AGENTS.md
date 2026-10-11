@@ -39,8 +39,12 @@ specs/001-free-return-prototype/contracts/queue.md. Independent review, native
 106/106 tests, both unsigned builds and five fresh-simulator UI scenarios passed.
 T009–T011 add manual reimbursements, explicit closure/correction and Waiting/History.
 Independent review, 143 native tests, both unsigned builds and all eight fresh-simulator
-UI scenarios passed on 2026-10-10. T001–T011 are accepted; 17 tasks remain open.
-The complete P1 workflow, full restore and P2 are pending. Full Xcode 26.3, iOS SDK
+UI scenarios passed on 2026-10-10. T012–T014 add validated backup/export, native
+Files import preview, confirmed atomic replacement and single/all deletion.
+Separate review, 181 native tests plus eight offline checks, both unsigned builds
+and all 12 fresh-simulator UI scenarios passed on 2026-10-11, with actual saved-file,
+raw-copy, cleanup and disk proof. T001–T014 are accepted; 14 tasks remain open.
+Full P1 accessibility/offline acceptance, P2 and release remain pending. Full Xcode 26.3, iOS SDK
 and simulators are available. Do not mark tasks complete merely because files exist.
 Verify the iOS app on a real SDK/device before reporting it works.
 Never equate specification quality checks with implementation checks.
@@ -57,3 +61,5 @@ Run python3 tooling/harness.py check for foundation checks and verify for Core q
 GitLab CI/release configuration is local preparation until the destination, runners
 and Apple signing are configured. The app target and shared UI-test scheme exist;
 remote CI/signing/release execution must be reported separately.
+Official XcodeBuildMCP 2.7.0 CLI works for the bounded visual gate; it is not
+connected as a chat MCP. CLI availability is not full accessibility acceptance.

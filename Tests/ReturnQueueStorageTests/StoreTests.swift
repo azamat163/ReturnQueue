@@ -296,8 +296,12 @@ final class StoreTests: XCTestCase {
       item.notes = String(repeating: "x", count: 4_000)
       return item
     }
-    let firstSize = try ArchiveCodec.encode([largeItem()]).count
-    let step = try ArchiveCodec.encode([largeItem(), largeItem()]).count - firstSize
+    let compactEncoder = JSONEncoder()
+    compactEncoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
+    let firstSize = try compactEncoder.encode(ReturnArchive(records: [largeItem()])).count
+    let step =
+      try compactEncoder.encode(ReturnArchive(records: [largeItem(), largeItem()])).count
+      - firstSize
     let count = (ArchiveCodec.maximumArchiveBytes - firstSize) / step + 1
     let records = (0..<count).map { _ in largeItem() }
     let bytes = try ArchiveCodec.encode(records)
@@ -308,6 +312,9 @@ final class StoreTests: XCTestCase {
     let before = try await store.load()
     let candidate = largeItem()
     XCTAssertEqual(try candidate.validated(), candidate)
+    XCTAssertGreaterThan(
+      try compactEncoder.encode(ReturnArchive(records: records + [candidate])).count,
+      ArchiveCodec.maximumArchiveBytes)
     do {
       _ = try await store.create(candidate)
       XCTFail("Oversized encoded candidate was committed")

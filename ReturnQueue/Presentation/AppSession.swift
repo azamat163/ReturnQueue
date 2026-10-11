@@ -11,7 +11,7 @@ public enum SessionPhase: Equatable, Sendable {
 }
 
 public enum SessionActivity: Equatable, Sendable {
-  case idle, loading, saving, exporting
+  case idle, loading, saving, exporting, importing
 }
 
 public enum SessionFailure: Error, Equatable, Sendable {
@@ -20,6 +20,7 @@ public enum SessionFailure: Error, Equatable, Sendable {
   case recovery(ReturnPersistenceFailure)
   case validation(ReturnQueueError)
   case transition(ReturnTransitionFailure)
+  case archive(ArchiveFailure)
 }
 
 @MainActor @Observable
@@ -28,10 +29,12 @@ public final class AppSession {
   public private(set) var activity: SessionActivity = .idle
   private let store: ReturnStore
   private let recovery: RecoveryFileService
+  private let archive: ArchiveService
 
-  public init(store: ReturnStore, recovery: RecoveryFileService) {
+  public init(store: ReturnStore, recovery: RecoveryFileService, archive: ArchiveService) {
     self.store = store
     self.recovery = recovery
+    self.archive = archive
   }
 
   public var snapshot: ReturnSnapshot? {
@@ -142,6 +145,104 @@ public final class AppSession {
       try await recovery.remove(url)
     } catch {
       throw SessionFailure.recovery(error as? ReturnPersistenceFailure ?? .rawCopyFailed)
+    }
+  }
+
+  public func exportBackup() async throws -> ArchiveExport {
+    guard canEdit else {
+      throw activity == .idle ? SessionFailure.notReady : SessionFailure.busy
+    }
+    try begin(.exporting)
+    defer { activity = .idle }
+    do {
+      // Return an admitted copy's identity even after caller cancellation.
+      return try await archive.exportValidated()
+    } catch {
+      throw archiveFailure(error)
+    }
+  }
+
+  public func previewRestore(from url: URL) async throws -> RestorePreview {
+    try beginRecovery(.importing)
+    defer { activity = .idle }
+    do {
+      return try await archive.previewImport(from: url)
+    } catch {
+      throw archiveFailure(error)
+    }
+  }
+
+  public func cancelRestore(_ id: UUID) async {
+    // Exact-ID discard remains available to a cancelled import's owner.
+    await archive.discardPreview(id)
+  }
+
+  public func restore(
+    _ id: UUID, confirmation: ArchiveConfirmation
+  ) async throws -> ReturnSnapshot {
+    try beginRecovery(.saving)
+    defer { activity = .idle }
+    do {
+      let committed = try await archive.restore(id, confirmation: confirmation)
+      publish(committed)
+      return committed
+    } catch {
+      throw archiveFailure(error)
+    }
+  }
+
+  public func delete(
+    itemID: UUID, expectedRevision: UInt64, confirmation: ArchiveConfirmation
+  ) async throws -> ReturnSnapshot {
+    try beginMutation()
+    defer { activity = .idle }
+    do {
+      let committed = try await store.delete(
+        itemID: itemID, expectedRevision: expectedRevision, confirmation: confirmation)
+      publish(committed)
+      return committed
+    } catch {
+      throw archiveFailure(error)
+    }
+  }
+
+  public func deleteAll(
+    expectedRevision: UInt64, confirmation: ArchiveConfirmation
+  ) async throws -> ReturnSnapshot {
+    try beginMutation()
+    defer { activity = .idle }
+    do {
+      let committed = try await store.deleteAll(
+        expectedRevision: expectedRevision, confirmation: confirmation)
+      publish(committed)
+      return committed
+    } catch {
+      throw archiveFailure(error)
+    }
+  }
+
+  public func cleanupBackup(_ export: ArchiveExport) async throws {
+    do {
+      try await archive.removeExport(export)
+    } catch {
+      throw archiveFailure(error)
+    }
+  }
+
+  private func beginRecovery(_ activity: SessionActivity) throws {
+    guard self.activity == .idle else { throw SessionFailure.busy }
+    switch phase {
+    case .ready, .loadFailed: self.activity = activity
+    case .notLoaded, .loading: throw SessionFailure.notReady
+    }
+  }
+
+  private func archiveFailure(_ error: any Error) -> any Error {
+    switch error {
+    case is CancellationError: return error
+    case let failure as ArchiveFailure: return SessionFailure.archive(failure)
+    case let failure as ReturnStoreFailure: return SessionFailure.store(failure)
+    default: return SessionFailure.archive(.invalidArchive)
     }
   }
 

@@ -787,3 +787,94 @@ backup/restore and deletion T012–T014 are next. Complete P1 accessibility/offl
 checks, P2 and the real-user pilot remain open. Preparing their proposals outside
 Git does not accept those tasks. Commit/push follows final documentation review
 and exact staged-source checks by root.
+
+## US4 final acceptance — 2026-10-11
+
+T012–T014 are accepted after separate source/test review, fresh independent QA
+and root's bounded visual gate. Current acceptance is **14 of 28 tasks; 14 open**.
+The authoritative behavior is in [archive-service.md](contracts/archive-service.md).
+Validated export uses native sharing/Save to Files; real fileImporter produces an
+opaque, generation-bound preview, then explicit confirmation atomically replaces
+the archive. Single/all deletion preserve committed data on cancel/failure.
+Read failure remains blocked until explicit repair; no empty fallback is used.
+
+Admitted staging/export operations return their exact identified capability even
+under late cancellation. The model discards that staged identity or retains an
+owned export for cleanup retry. Native sharing retains its copy through actual
+matching dismissal and successful removal. Restore/delete-all reset every cached
+path only after actual Data sheet dismissal, including coincident IDs.
+
+The initial missing-API RED executed against absent production symbols; its first
+materialization contained 25 new native methods, the final pre-production RED 27.
+Seven additional cases followed during implementation, then three capacity cases
+and one failed-delete regression brought the executed package total to 181.
+Evidence is retained in `../evidence/us4-2026-10-10/tests-first-red/`,
+`compact-regression/` and `delete-confirmation-regression/` under that same stage.
+Setup/cache failures are recorded separately and are not behavioral RED.
+
+A valid compact P1 archive exposed an encoding-capacity defect: decoding/staging
+passed, but pretty output exceeded the unchanged 20 MiB cap. The representation-only
+fix retains legacy pretty/sorted bytes exactly whenever they fit; only oversized
+output falls back to compact sorted JSON with unescaped slashes, still enforcing
+the same cap. Schema, decoder, model and limits are unchanged. Approved baseline
+fixture exceptions are ArchiveService DI construction and an independent compact
+size oracle in the old oversize-candidate test; its rejection/state/disk assertions
+remain intact. All 143 baseline native methods and the literal eight accepted UI
+methods/helpers are preserved. The four new UI methods are a separate class.
+
+Failed author attempts remain in the stage evidence. They include real missing
+Data entry/navigation, consumed-confirmation and native Files readiness findings;
+none count as final acceptance. A scoped trace observed native alert presentation
+false before the confirmed task while successful callbacks/path clearing ran.
+The shipping view now separates writable native presentation from semantic model
+approval; temporary traces were removed. Author coverage was scoped to the two
+affected failures, with prior rich/all-delete passes attributed to their exact
+earlier source; no complete final four-case author pass was claimed.
+
+The earlier independent full review and affected reviews are preserved in
+`review-final/`, `review-delete-final/` and the subsequent review directories.
+Agent capacity prevented reactivating the earlier reviewer for the last bounded
+changes, so root performed those affected reviews as a non-author of production
+and tests. A separate verifier then ran the complete final gates; roles did not
+merge. Final source identity is bound by 105 unchanged paths before/after QA.
+
+The final independent report is
+`../evidence/us4-2026-10-10/verifier-final/verification-report.json`, with exact
+command JSON, logs, `source-tested-final.json`, `FullUIResults.xcresult`, method
+results and disk manifests. Xcode 26.3/17C529, Swift 6.2.4 and iOS SDK 26.2 were
+selected via `DEVELOPER_DIR=/Applications/Xcode-26.3.0.app/Contents/Developer`.
+The fresh owned iPhone 17 simulator ran iOS 26.3.1/23D8133 at UID 501.
+
+- **181/181 native tests**, zero failures/skips: 72 Core, 58 Storage, 51 Presentation.
+  `python3 tooling/harness.py verify` also passed all eight offline checks,
+  command 35.721 seconds. Strict recursive formatting, foundation/Spec Kit,
+  project/plist/shared-scheme and diff checks passed.
+- Unsigned Debug generic Simulator and Release generic iOS builds passed,
+  22.520 and 30.273 seconds. Actual Debug sharing flags are true; Release flags
+  are false and DEBUG fixture hooks are absent from the complete Release payload.
+- **12/12 UI scenarios**, zero failures/skips, one complete unfiltered run without
+  retries or parallel testing: suite 2158.922 seconds, command 2174.936 seconds,
+  exit 0. This includes all eight regressions and four meaningful backup journeys.
+
+Actual disk proof covers 14 isolated roots and 16 surviving records. Current-run
+two raw and two validated copies exactly equal their source bytes; both temporary
+directories are empty and no production-default archive exists. A real native
+Save to Files produced a surviving 2629-byte user copy, equal to its observed
+private export, live archive and reference. It was reimported twice; three record
+IDs, two reimbursements, separate money/credit, dates and notes remain intact.
+Failed writes preserve exact prior bytes; single deletion removes only its owner;
+repair matches original bytes; deletion/empty replacement produce canonical empty.
+
+Root's visual report is `../evidence/us4-2026-10-10/root/xcodebuildmcp-visual/report.json`.
+Official **XcodeBuildMCP 2.7.0 CLI works**, but is not connected as a chat MCP.
+Direct stdio MCP initialize/tools-list, nonpersistent owned-device defaults,
+snapshot_ui and screenshot calls also passed; their JSON is retained beside the
+visual report, while the desktop chat tool namespace remains unconnected.
+Root inspected enabled Data, real preview, restore/single-delete confirmation,
+invalid import and write-error images. At accessibility-extra-extra-extra-large,
+buttons wrap, semantic scrolling reaches Delete all, and native Cancel preserves
+all 14 archive hashes; content size was restored to large. This is a bounded US4
+gate: native title truncation and the alert's scrollable/clipped initial message
+remain T015 follow-ups. Full layout/VoiceOver, T015/T016 offline/P1 acceptance,
+physical protection, signed release, remote GitLab CI, P2 and the real-user pilot
+remain open. iOS 17 deployment/build compatibility is not runtime-17 evidence.

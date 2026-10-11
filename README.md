@@ -20,7 +20,7 @@
 - [Требования бесплатной версии](docs/product-requirements.md): 55 требований, 7 историй.
 - [План и 28 задач](specs/001-free-return-prototype/tasks.md); [бесплатный тест пользы](docs/prototype-test-plan.md).
 - [Бриф 11 макетов для Figma](docs/figma-design-brief.md).
-- [Макет в Figma — 11 экранов](https://www.figma.com/design/SMVZHX6PVpx83cRfqM6S2o/Untitled?node-id=11-93): редактируемые слои и компоненты, English UI, SF Pro. Add/Details/Queue, Waiting/History и формы возмещений/ручного закрытия реализованы с нативными адаптациями; Data & backups и P2 остаются макетами.
+- [Макет в Figma — 11 экранов](https://www.figma.com/design/SMVZHX6PVpx83cRfqM6S2o/Untitled?node-id=11-93): редактируемые слои и компоненты, English UI, SF Pro. Add/Details/Queue, Waiting/History, формы возмещений/ручного закрытия и Data & backups реализованы с нативными адаптациями; P2 остаётся макетами.
 - [Summary, Settings и напоминание для вещи — концепты P2](https://www.figma.com/design/SMVZHX6PVpx83cRfqM6S2o/Untitled?node-id=22-249). Напоминания включаются пользователем и отменяются после сдачи; деньги и store credit в Summary разделены.
 - [Превью первого макета из 8 экранов](docs/design/return-queue-preview.png), [превью новых экранов P2](docs/design/return-queue-settings-preview.png); [идентификаторы Figma и проверка](docs/figma-design-state.json).
 
@@ -33,7 +33,7 @@ T005 реализует ReturnQueueStorage и actor ReturnStore по
 [storage contract](specs/001-free-return-prototype/contracts/storage.md): безопасное
 чтение, atomic write, блокировка после read failure и потоковая исходная recovery copy.
 Независимые review, native 77/77 XCTest и обе unsigned iOS сборки прошли 4 октября 2026.
-Полный backup/restore остаётся T012/T013.
+На этом этапе полный backup/restore оставался отдельным T012/T013.
 T006 добавляет рабочие Add/edit/details, простую Queue для навигации и Retry/Export
 исходных данных при ошибке чтения. Отмена не меняет запись; форма закрывается только
 после сохранения на диск. Неизвестные дата/сумма остаются Not set.
@@ -52,8 +52,15 @@ T009–T011 добавляют сдачу, отдельный учёт дене�
 обе unsigned builds и 8/8 UI-сценариев прошли 10 октября 2026.
 [Контракт возмещений](specs/001-free-return-prototype/contracts/refunds.md),
 [Figma/native mapping](docs/design/us3-native-mapping.md).
-Приняты T001–T011 (11 задач); 17 остаются открытыми. Полный backup/restore,
-полная проверка доступности и P2 ещё впереди. Весь P1 и релиз не завершены.
+T012–T014 добавляют validated export, настоящий Save to Files и импорт через Files,
+предпросмотр/подтверждаемую атомарную замену, восстановление после ошибки чтения
+и подтверждаемое удаление одной записи/всех данных. Независимые review,
+181/181 native tests плюс 8 offline checks, обе unsigned builds и полный прогон
+12/12 UI-сценариев прошли 11 октября 2026. Файлы на диске подтверждают сохранность
+денег/credit, повторный restore без копий, сохранённый пользовательский backup
+и очистку временных копий. [Контракт архива](specs/001-free-return-prototype/contracts/archive-service.md).
+Приняты T001–T014 (14 задач); 14 остаются открытыми. Полная проверка доступности,
+P1 offline acceptance и P2 ещё впереди. Весь P1 и релиз не завершены.
 Синхронизируемые `../sources/` и родительский AGENTS.md остаются справочными материалами.
 
 ## Основа разработки iOS
@@ -69,7 +76,9 @@ T009–T011 добавляют сдачу, отдельный учёт дене�
 
 Локальная проверка: `python3 tooling/harness.py check`; проверка форматирования и
 тестов ядра: `python3 tooling/harness.py verify`. Это не подтверждение iOS acceptance
-или запуска pipeline в GitLab. Подробности окружения и результаты — в harness guide.
+или запуска pipeline в GitLab. Официальный XcodeBuildMCP 2.7.0 CLI работает
+и использован для ограниченной визуальной проверки; как chat MCP он не подключён.
+Подробности окружения и результаты — в harness guide.
 
 ## Использование
 
@@ -93,9 +102,9 @@ $speckit-converge
 ```
 
 Спецификация бесплатного эксперимента готова в specs/001-free-return-prototype/.
-Первый Core/JSON slice принят. Текущий этап — T001 минимальный iOS bootstrap с
-пройденными review/build/launch gates; далее durable storage, формы/очередь, полный
-iOS acceptance и пользовательская проверка пользы.
+T001–T014 приняты: durable storage, формы/очередь, ручной итог и backup/restore
+прошли отдельные review и SDK/UI gates. Далее T015/T016: полная доступность,
+offline/P1 acceptance, затем P2 и пользовательская проверка пользы.
 В исходном ChatGPT workspace корень репозитория находится в папке `app`;
 установленные навыки могут потребовать открытия Codex именно на этой папке.
 В текущем чате агент может читать их инструкции напрямую; регистрация в интерфейсе

@@ -2,8 +2,13 @@ import SwiftUI
 import UIKit
 
 struct RecoveryShare: Identifiable {
-  let id = UUID()
+  let id: UUID
   let url: URL
+
+  init(id: UUID = UUID(), url: URL) {
+    self.id = id
+    self.url = url
+  }
 }
 
 struct RecoveryShareView: UIViewControllerRepresentable {

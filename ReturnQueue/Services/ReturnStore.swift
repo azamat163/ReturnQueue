@@ -47,14 +47,27 @@ public actor ReturnStore {
   private let persistence: any ReturnPersistence
   private var currentState: ReturnStoreState = .notLoaded
   private var revision: UInt64 = 0
+  private var generation = UUID()
+  private var pendingRestore: StagedRestore?
+  private let restoreStageObserver: @Sendable () -> Void
 
   public init(persistence: any ReturnPersistence) {
     self.persistence = persistence
+    restoreStageObserver = {}
+  }
+
+  init(
+    persistence: any ReturnPersistence, restoreStageObserver: @escaping @Sendable () -> Void
+  ) {
+    self.persistence = persistence
+    self.restoreStageObserver = restoreStageObserver
   }
 
   public func state() -> ReturnStoreState { currentState }
 
   public func load() throws -> ReturnSnapshot {
+    // Even a failed read changes the replacement target the user previously reviewed.
+    generation = UUID()
     let previous: ReturnSnapshot?
     switch currentState {
     case .notLoaded: previous = nil
@@ -137,6 +150,81 @@ public actor ReturnStore {
     }
   }
 
+  func stageRestore(_ data: Data) throws -> RestorePreview {
+    try Task.checkCancellation()
+    if case .notLoaded = currentState { throw ReturnStoreFailure.notLoaded }
+    let records = try decodedRestore(data)
+    let currentCount: Int?
+    if case .ready(let snapshot) = currentState {
+      currentCount = snapshot.records.count
+    } else {
+      currentCount = nil
+    }
+    let preview = RestorePreview(
+      id: UUID(), returnCount: records.count,
+      reimbursementCount: records.reduce(0) { $0 + $1.reimbursements.count },
+      currentReturnCount: currentCount)
+    pendingRestore = StagedRestore(preview: preview, data: data, generation: generation)
+    restoreStageObserver()
+    // An admitted token must return even if cancellation arrived during the observer.
+    return preview
+  }
+
+  func discardRestore(_ id: UUID) {
+    if pendingRestore?.preview.id == id { pendingRestore = nil }
+  }
+
+  func restore(_ id: UUID, confirmation: ArchiveConfirmation) throws -> ReturnSnapshot {
+    try Task.checkCancellation()
+    guard confirmation == .confirmed else { throw ArchiveFailure.confirmationRequired }
+    guard let candidate = pendingRestore, candidate.preview.id == id else {
+      throw ArchiveFailure.invalidPreview
+    }
+    guard candidate.generation == generation else { throw ArchiveFailure.stalePreview }
+    if case .notLoaded = currentState { throw ReturnStoreFailure.notLoaded }
+    let records = try decodedRestore(candidate.data)
+    let committed = try commit(records)
+    pendingRestore = nil
+    return committed
+  }
+
+  func encodedCommittedArchive() throws -> Data {
+    try ArchiveCodec.encode(writableSnapshot().records)
+  }
+
+  public func delete(
+    itemID: UUID, expectedRevision: UInt64, confirmation: ArchiveConfirmation = .none
+  ) throws -> ReturnSnapshot {
+    try Task.checkCancellation()
+    let snapshot = try writableSnapshot()
+    guard confirmation == .confirmed else { throw ArchiveFailure.confirmationRequired }
+    guard expectedRevision == snapshot.revision else { throw ReturnStoreFailure.staleRevision }
+    guard snapshot.records.contains(where: { $0.id == itemID }) else {
+      throw ReturnStoreFailure.missingRecord
+    }
+    return try commit(snapshot.records.filter { $0.id != itemID })
+  }
+
+  public func deleteAll(
+    expectedRevision: UInt64, confirmation: ArchiveConfirmation = .none
+  ) throws -> ReturnSnapshot {
+    try Task.checkCancellation()
+    let snapshot = try writableSnapshot()
+    guard confirmation == .confirmed else { throw ArchiveFailure.confirmationRequired }
+    guard expectedRevision == snapshot.revision else { throw ReturnStoreFailure.staleRevision }
+    return try commit([])
+  }
+
+  private func decodedRestore(_ data: Data) throws -> [ReturnItem] {
+    do {
+      return try ArchiveCodec.decode(data)
+    } catch ReturnQueueError.archiveTooLarge {
+      throw ArchiveFailure.archiveTooLarge
+    } catch {
+      throw ArchiveFailure.invalidArchive
+    }
+  }
+
   private func writableSnapshot() throws -> ReturnSnapshot {
     switch currentState {
     case .notLoaded: throw ReturnStoreFailure.notLoaded
@@ -169,6 +257,13 @@ public actor ReturnStore {
     let snapshot = ReturnSnapshot(revision: next, records: records)
     revision = next
     currentState = .ready(snapshot)
+    generation = UUID()
     return snapshot
   }
+}
+
+private struct StagedRestore {
+  let preview: RestorePreview
+  let data: Data
+  let generation: UUID
 }

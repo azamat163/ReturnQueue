@@ -19,9 +19,11 @@ struct PresentationFixture: Sendable {
 
   @MainActor
   func session(persistence: (any ReturnPersistence)? = nil) -> AppSession {
-    AppSession(
-      store: ReturnStore(persistence: persistence ?? ReturnRepository(fileURL: archiveURL)),
-      recovery: RecoveryFileService(directory: recoveryDirectory))
+    let store = ReturnStore(persistence: persistence ?? ReturnRepository(fileURL: archiveURL))
+    return AppSession(
+      store: store,
+      recovery: RecoveryFileService(directory: recoveryDirectory),
+      archive: ArchiveService(store: store, directory: directory.appendingPathComponent("backups")))
   }
 
   func remove() throws {

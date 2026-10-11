@@ -111,7 +111,17 @@ US3 T009–T011 следует [refund contract](contracts/refunds.md): точн
 37 новых native tests и три UI journeys материализованы tests-first; ожидаемый
 missing-symbol RED подтверждён до source GO. US3 принят 2026-10-10 после отдельного
 review, независимых 143 native tests, обеих unsigned builds и восьми UI сценариев.
-Полный restore, полная доступность и P2 ещё не приняты.
+На этом US3 handoff полный restore, полная доступность и P2 ещё не были приняты.
+
+US4 T012–T014 следует [archive-service contract](contracts/archive-service.md):
+opaque preview привязан к generation Store, включая неуспешное чтение; явное
+подтверждение заменяет всю базу атомарно. Export/delete/import не меняют P1 JSON.
+Data & backups открывается напрямую из P1; native fileImporter и share используют
+реальный локальный owner. Test-first RED зафиксирован до реализации; отдельные
+review, независимые 181 native tests плюс 8 offline checks, обе unsigned builds
+и полный 12 UI run прошли 2026-10-11 с actual Files save/import и disk proof.
+T012–T014 приняты; всего 14 задач приняты, 14 открыты. T015/T016, P2,
+VoiceOver, physical-device protection, signing, remote CI и pilot остаются отдельно.
 
 **Structure Decision**: Core не зависит от UI и iOS-фреймворков; устройство и разрешения
 обрабатывает Services, действия пользователя — UI. Не создавать API/backend.

@@ -10,8 +10,11 @@ UI scenarios on that date. T007/T008 subsequently passed distinct review, native
 106 tests, both unsigned builds and five fresh-simulator UI scenarios, adding the
 planned-only grouped Queue. US3 adds explicit manual refunds, state changes and
 Waiting/History, independently reviewed and verified with 143 native tests, both
-unsigned builds and eight UI scenarios on 2026-10-10. T001–T011 are accepted;
-17 tasks remain open. Full restore/accessibility/P2 remain pending; see
+unsigned builds and eight UI scenarios on 2026-10-10. US4 validated export/restore
+and deletion subsequently passed separate review, independent 181 native tests,
+eight offline checks, both unsigned builds and all 12 UI scenarios on 2026-10-11.
+T001–T014 are accepted; 14 tasks remain open. Full accessibility/offline/P2 and
+release acceptance remain pending; see
 [slice evidence](../specs/001-free-return-prototype/verification.md).
 T001 now has a minimal SwiftUI entry/empty Queue linking the local Core package.
 Independent review, unsigned Simulator/Release builds and actual simulator
@@ -57,9 +60,8 @@ durable storage, current calendar/time and the notification adapter. Keep pure
 selectors concrete. No service locator, universal base ViewModel, generic
 repository hierarchy or protocol for every type is needed.
 
-Target organization: Core, T005 storage and minimal T001 app/RootView are accepted.
-Product screen/ViewModel
-organization remains planned:
+Target organization: Core, Storage, Presentation and the app target are implemented.
+The structure below also includes planned P2 screens/services:
 
 ```text
 ReturnQueue/
@@ -209,8 +211,8 @@ SwiftPM product (macOS 14 host baseline; iOS 17 unchanged); SwiftUI views stay i
 the app target. Recovery/DEBUG fixture IO lives in actor services. RootView retains
 pending recovery-copy ownership and retry controls until cleanup succeeds.
 At the T006 handoff, the shared scheme contained four real UI tests and the package
-covered 16 Presentation, 49 Core and 28 Storage cases. Full replacement/restore
-and reimbursement workflows remain separate tasks.
+covered 16 Presentation, 49 Core and 28 Storage cases. At that handoff full
+replacement/restore and reimbursement workflows remained separate tasks.
 
 ## T007/T008 Queue API
 
@@ -220,8 +222,9 @@ QueueViewModel projects the latest committed AppSession snapshot and refreshes t
 local Gregorian day without archive writes. Accepted storage, AppSession and
 editor contracts were unchanged in that slice. Its accepted suite had 56 Core,
 28 Storage and 22 Presentation cases (106 total), plus five UI scenarios. The
-current US3 suite has 70 Core, 34 Storage and 39 Presentation cases (143 total)
-and eight UI scenarios in the shared scheme.
+accepted US3 suite had 70 Core, 34 Storage and 39 Presentation cases (143 total)
+and eight UI scenarios. Current US4 verification executes 72 Core, 58 Storage
+and 51 Presentation cases (181 total), plus all 12 shared-scheme UI scenarios.
 
 ## US3 refund and mutation API
 
@@ -256,3 +259,23 @@ cancellation and all eight UI scenarios passed with current disk proof; the nati
 test checks disappearance of both the actual activity and original-file caption.
 Current acceptance and historical failed attempts are recorded in the feature
 verification.
+
+## US4 archive and deletion API
+
+[archive-service.md](../specs/001-free-return-prototype/contracts/archive-service.md)
+defines generation-bound staged candidates, strict coordinated input reading,
+revision/confirmation-checked single/all deletion and atomic replacement.
+ReturnStore owns admission and commit; ArchiveService owns identified protected
+exports and cleanup. AppSession publishes durable results; MainActor screen models
+retain draft/preview/error and exact capability ownership under cancellation.
+DataSettingsView uses native fileImporter and the attached native sharing owner
+inside its own sheet. Confirmed restore/delete-all resets all cached paths only
+after actual dismissal. Missing committed-ready IDs are pruned immediately;
+cancel/failure and loading/readFailed do not discard valid paths.
+
+The native delete alert has a separate writable presentation binding; its native
+dismissal does not cancel the frozen semantic approval used by the confirmed task.
+The existing P1 schema/model/decoder are unchanged. The codec preserves fitting
+legacy pretty bytes, with a compact fallback only for otherwise oversized output.
+Final independent 181 native/12 UI and disk proof are in the feature verification;
+these are unsigned simulator/device-build gates, not full accessibility or release.

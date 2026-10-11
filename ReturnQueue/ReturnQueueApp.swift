@@ -24,7 +24,12 @@ struct ReturnQueueApp: App {
         failsReplacement = arguments.contains("-rq-test-write-failure")
         fixture = UITestFixtureService(
           directory: directory, corruptOnLaunch: arguments.contains("-rq-test-corrupt"),
-          repairOnRetry: arguments.contains("-rq-test-repair-on-retry"))
+          repairOnRetry: arguments.contains("-rq-test-repair-on-retry"),
+          documentsDirectory: arguments.contains("-rq-test-backup-fixtures")
+            ? URL.documentsDirectory.appendingPathComponent(
+              "ReturnQueueFixtures", isDirectory: true
+            )
+            .appendingPathComponent(identifier.uuidString, isDirectory: true) : nil)
       }
       let selectedFixture = fixture
       prepare = { try await selectedFixture?.prepare() }
@@ -42,7 +47,11 @@ struct ReturnQueueApp: App {
     let recovery = RecoveryFileService(
       directory: URL.temporaryDirectory.appendingPathComponent(
         "ReturnQueueRecovery", isDirectory: true))
-    _session = State(initialValue: AppSession(store: store, recovery: recovery))
+    let archive = ArchiveService(
+      store: store,
+      directory: URL.temporaryDirectory.appendingPathComponent(
+        "ReturnQueueBackups", isDirectory: true))
+    _session = State(initialValue: AppSession(store: store, recovery: recovery, archive: archive))
   }
 
   var body: some Scene {

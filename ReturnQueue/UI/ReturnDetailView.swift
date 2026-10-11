@@ -6,11 +6,15 @@ struct ReturnDetailView: View {
   let session: AppSession
   let itemID: UUID
   var onStateSaved: () -> Void = {}
+  var onDeleted: () -> Void = {}
+  @Environment(\.dismiss) private var dismiss
   @State private var editor: EditorPresentation?
   @State private var stateEditor: StatePresentation?
   @State private var stateChangeCommitted = false
   @State private var reimbursementEditor: ReimbursementPresentation?
   @State private var deletion: RefundActionModel?
+  @State private var returnDeletion: DeleteReturnModel?
+  @State private var returnDeletionPresented = false
 
   private var item: ReturnItem? {
     session.snapshot?.records.first { $0.id == itemID }
@@ -71,6 +75,25 @@ struct ReturnDetailView: View {
             infoRow("Purchase date", DetailFormatting.day(item.purchaseDate))
             note("Policy reference", item.policyReference ?? "Not set")
             sessionStatus
+            Button("Delete return", role: .destructive) {
+              guard session.canEdit, let snapshot = session.snapshot else { return }
+              // Capture the displayed revision when this confirmation actually opens.
+              let model = DeleteReturnModel(
+                session: session, itemID: itemID, expectedRevision: snapshot.revision)
+              returnDeletion = model
+              model.requestConfirmation()
+              returnDeletionPresented = true
+            }
+            .disabled(!session.canEdit)
+            .accessibilityIdentifier("detail.deleteReturn")
+            if let returnDeletion {
+              switch returnDeletion.saveState {
+              case .saving: ProgressView("Deleting return…")
+              case .failed(let message):
+                Text(message).foregroundStyle(.red).accessibilityIdentifier("delete.returnError")
+              case .idle, .succeeded: EmptyView()
+              }
+            }
           }
           .padding(.horizontal, 20)
           .padding(.vertical)
@@ -133,6 +156,26 @@ struct ReturnDetailView: View {
             + "\n\nThese are the resulting recorded totals. The return and other entries are kept."
         ).accessibilityIdentifier("refund.confirmation")
       }
+    }
+    .alert(
+      "Delete return?",
+      isPresented: $returnDeletionPresented
+    ) {
+      Button("Cancel", role: .cancel) { returnDeletion?.cancelConfirmation() }
+        .accessibilityIdentifier("delete.returnCancel")
+      Button("Delete return", role: .destructive) {
+        guard let model = returnDeletion else { return }
+        Task {
+          await model.confirm()
+          if model.saveState == .succeeded {
+            dismiss()
+            onDeleted()
+          }
+        }
+      }
+      .accessibilityIdentifier("delete.returnConfirm")
+    } message: {
+      Text("This removes this return and all its recorded reimbursements from this iPhone.")
     }
   }
 
@@ -261,6 +304,7 @@ struct ReturnDetailView: View {
       case .saving: ProgressView("Saving…")
       case .exporting: ProgressView("Preparing recovery copy…")
       case .loading: ProgressView("Loading saved data…")
+      case .importing: ProgressView("Reading backup…")
       case .idle: EmptyView()
       }
     }

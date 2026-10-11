@@ -52,9 +52,14 @@ public enum ArchiveCodec {
     let records = try validatedRecords(records)
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-    let data: Data
+    let archive = ReturnArchive(records: records)
+    var data: Data
     do {
-      data = try encoder.encode(ReturnArchive(records: records))
+      data = try encoder.encode(archive)
+      if data.count > maximumArchiveBytes {
+        encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
+        data = try encoder.encode(archive)
+      }
     } catch let error as ReturnQueueError {
       throw error
     } catch {
